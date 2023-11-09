@@ -1,9 +1,9 @@
 import React from "react";
-import Sidebar from "../component/sidebar";
 import DashboardContent from "./dashboardContent";
 import Settings from "./settings";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Sidebar } from "../component/sideBar";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -18,9 +18,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex">
-      <div className="w-1/5">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      </div>
+      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
       <div className="w-4/5">
         {activeTab === "dashboard" && <DashboardContent />}
         {activeTab === "settings" && <Settings />}
