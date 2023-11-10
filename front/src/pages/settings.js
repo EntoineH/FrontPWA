@@ -1,10 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-function Settings() {
+const Settings = () => {
+  const [notificationEnabled, setNotificationEnabled] = useState(false);
+
+  useEffect(() => {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        // Notifications are allowed
+        console.log("Notifications are allowed");
+        setNotificationEnabled(true);
+      } else if (Notification.permission === "denied") {
+        // Notifications are blocked
+        console.log("Notifications are blocked");
+      } else {
+        // Notifications are not denied or granted yet, can prompt the user
+        console.log("Notifications are not denied or granted yet");
+      }
+    }
+  }, []);
+
+  const handleCheckboxChange = () => {
+    // Toggle notification state
+    setNotificationEnabled(!notificationEnabled);
+
+    // Request notification permission
+    if (!notificationEnabled) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          setNotificationEnabled(true);
+        } else {
+          setNotificationEnabled(false);
+        }
+      });
+    }
+  };
+
   return (
-    <div class="h-fit flex justify-center items-center">
-      <div class="md:h-screen w-full m-4 flex items-center">
-        <div class="mx-1 h-max my-4 bg-white w-full shadow-2xl rounded-3xl shadow-slate-600">
+    <div class="md:h-screen h-fit flex">
+      <div class="w-full  m-4 flex items-center">
+        <div class="mx-1 my-4 md:h-fit bg-white w-full shadow-2xl rounded-3xl shadow-slate-600">
           <h1 class="mx-3 mt-3 text-xl font-bold border-b border-gray-900/10 pb-2">
             Edit Profile
           </h1>
@@ -111,6 +145,8 @@ function Settings() {
                             name="everything"
                             type="checkbox"
                             class="h-4 w-4 rounded border-gray-300 accent-indigo-600"
+                            checked={notificationEnabled}
+                            onChange={handleCheckboxChange}
                           />
                         </div>
 
@@ -216,6 +252,6 @@ function Settings() {
       </div>
     </div>
   );
-}
+};
 
 export default Settings;
