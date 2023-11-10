@@ -3,7 +3,7 @@ import DashboardContent from "./dashboardContent";
 import Settings from "./settings";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Sidebar } from "../component/sideBar";
+import { Sidebar } from "../component/sidebar";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
