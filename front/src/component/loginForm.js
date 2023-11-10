@@ -16,25 +16,58 @@ function LoginForm() {
         setPassword(event.target.value);
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            // Verify the token on the server
+            axios.post('https://pwa-backend-2c14dae9b4e4.herokuapp.com/validate-token', { token })
+                .then(response => {
+                    if (response.data.success) {
+                        // If the token is valid, navigate to the dashboard
+                        navigate('/dashboard');
+                    } else {
+                        // If the token is invalid or expired, clear it from local storage
+                        localStorage.removeItem('token');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error verifying token:', error);
+                    // Handle error as needed
+                });
+        }
+    }, []);
+
     const handleLogin = async (event) => {
         event.preventDefault();
-        axios.post('https://pwa-backend-2c14dae9b4e4.herokuapp.com/login', { "email": email, "password": password })
-            .then(response => {
-                if (response.data["success"] === true) {
-                    navigate('/dashboard')
-                } else {
-                    const { message } = response.data;
-                    setErrors({})
-                    if (message === 'Invalid email') {
-                        setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid email' }));
-                    } else if (message === 'Invalid password') {
-                        setErrors((prevErrors) => ({ ...prevErrors, password: 'Invalid password' }));
-                    } else {
-                        setErrors((prevErrors) => ({ ...prevErrors, general: message || 'Unexpected error occurred' }));
-                    }
-                }
-            })
-    }
+        
+        try {
+          const response = await axios.post('https://pwa-backend-2c14dae9b4e4.herokuapp.com/login', {
+            email,
+            password,
+          });
+    
+          if (response.data.success === true) {
+            // Save the token to local storage
+            localStorage.setItem('token', response.data.token);
+            navigate('/dashboard');
+          } else {
+            const { message } = response.data;
+            setErrors({});
+    
+            if (message === 'Invalid email') {
+              setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid email' }));
+            } else if (message === 'Invalid password') {
+              setErrors((prevErrors) => ({ ...prevErrors, password: 'Invalid password' }));
+            } else {
+              setErrors((prevErrors) => ({ ...prevErrors, general: message || 'Unexpected error occurred' }));
+            }
+          }
+        } catch (error) {
+          console.error('Error during login:', error);
+          setErrors({ general: 'An error occurred. Please try again later.' });
+        }
+      };
 
     return (
         <div>

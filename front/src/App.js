@@ -1,15 +1,18 @@
 import React from "react";
 import "./App.css";
 import LoginPage from "./pages/login";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import RegisterPage from "./pages/register";
 import ResetPasswordPage from "./pages/resetPassword";
 import ConfirmResetPasswordPage from "./pages/confirmResetPassword";
 import SuccessResetPassPage from "./pages/successResetPassword";
 import withSplashScreen from "./pages/splashScreen";
 import Dashboard from "./pages/dashboard";
+import ProtectedRoute from "./component/ProtectedRoute";
 
 function App() {
+  const isAuthenticated = localStorage.getItem('token');
+
   return (
     <div>
       <Router>
