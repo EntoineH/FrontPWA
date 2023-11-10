@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/24/solid";
 import * as cgIcon from "react-icons/cg";
 
-export function Sidebar({ activeTab, onTabChange }) {
+function SideBar({ activeTab, onTabChange, toggleSidebar }) {
   return (
     <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
       <div className="mb-2 p-4">
@@ -22,6 +22,13 @@ export function Sidebar({ activeTab, onTabChange }) {
           <Typography variant="h5" color="blue-gray">
             OrganizeMe
           </Typography>
+          <IconButton
+            variant="text"
+            onClick={toggleSidebar}
+            className="lg:hidden"
+          >
+            <cgIcon.CgCloseR size={20} />
+          </IconButton>
         </div>
       </div>
       <List>
@@ -50,3 +57,5 @@ export function Sidebar({ activeTab, onTabChange }) {
     </Card>
   );
 }
+
+export default SideBar;
