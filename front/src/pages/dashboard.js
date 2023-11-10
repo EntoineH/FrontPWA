@@ -3,7 +3,7 @@ import DashboardContent from "./dashboardContent";
 import Settings from "./settings";
 import { useState } from "react";
 import { useEffect } from "react";
-import SideBar from "../component/sideBar.js";
+import SideBar from "../component/sidebar.js";
 import { IconButton } from "@material-tailwind/react";
 import * as cgIcon from "react-icons/cg";
 

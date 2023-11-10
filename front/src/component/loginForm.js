@@ -50,6 +50,9 @@ function LoginForm() {
           if (response.data.success === true) {
             // Save the token to local storage
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('id', response.data.user._id);
+            localStorage.setItem('email', response.data.user.email);
+            localStorage.setItem('username', response.data.user.username);
             navigate('/dashboard');
           } else {
             const { message } = response.data;

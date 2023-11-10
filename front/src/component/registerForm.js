@@ -38,6 +38,9 @@ function RegisterForm() {
             .then((response) => {
                 console.log("reponse == ", response)
                 if (response.data.success === true) {
+                    localStorage.setItem('id', response.data.user._id);
+                    localStorage.setItem('email', response.data.user.email);
+                    localStorage.setItem('username', response.data.user.username);
                     navigate('/dashboard');
                 } else {
                     const { message } = response.data;
