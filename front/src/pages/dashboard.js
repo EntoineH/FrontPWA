@@ -3,13 +3,15 @@ import DashboardContent from "./dashboardContent";
 import Settings from "./settings";
 import { useState } from "react";
 import { useEffect } from "react";
-import SideBar from "../component/sidebar.js";
+import SideBar from "../component/sideBar.js";
 import { IconButton } from "@material-tailwind/react";
 import * as cgIcon from "react-icons/cg";
+import AddWorkspaceModal from "../component/addWorkspaceModal";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showAddWorkspaceModal, setShowAddWorkspaceModal] = useState(false);
 
   useEffect(() => {
     if (activeTab === "dashboard") {
@@ -21,6 +23,14 @@ const Dashboard = () => {
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const openAddWorkspaceModal = () => {
+    setShowAddWorkspaceModal(true);
+  };
+
+  const closeAddWorkspaceModal = () => {
+    setShowAddWorkspaceModal(false);
   };
 
   return (
@@ -39,12 +49,19 @@ const Dashboard = () => {
           activeTab={activeTab}
           onTabChange={setActiveTab}
           toggleSidebar={toggleSidebar}
+          openAddWorkspaceModal={openAddWorkspaceModal}
         />
       )}
       <div className="w-4/5">
         {activeTab === "dashboard" && <DashboardContent />}
         {activeTab === "settings" && <Settings />}
       </div>
+      {showAddWorkspaceModal && (
+        <AddWorkspaceModal
+          isOpen={showAddWorkspaceModal}
+          onClose={closeAddWorkspaceModal}
+        />
+      )}
     </div>
   );
 };

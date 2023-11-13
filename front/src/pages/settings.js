@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Settings = () => {
   const [notificationEnabled, setNotificationEnabled] = useState(false);
-  const [username, setUsername] = useState(localStorage.getItem('username'))
-  const [email, setEmail] = useState(localStorage.getItem('email'))
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [username, setUsername] = useState(localStorage.getItem("username"));
+  const [email, setEmail] = useState(localStorage.getItem("email"));
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const id = localStorage.getItem('id');
+  const id = localStorage.getItem("id");
 
   // change password
-  const handleUsername = event => {
+  const handleUsername = (event) => {
     setUsername(event.target.value);
   };
 
-  const handleEmail = event => {
+  const handleEmail = (event) => {
     setEmail(event.target.value);
   };
 
-  const handlePassword = event => {
+  const handlePassword = (event) => {
     setPassword(event.target.value);
   };
 
-  const handleConfirmPassword = event => {
+  const handleConfirmPassword = (event) => {
     setConfirmPassword(event.target.value);
   };
 
@@ -34,36 +34,45 @@ const Settings = () => {
 
     try {
       var response;
-      if (password != "") {
-        response = await axios.put(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/${id}`, {
-          username,
-          email,
-          notification: notificationEnabled,
-          newPassword: password,
-          confirmPassword
-        });
+      if (password !== "") {
+        response = await axios.put(
+          `https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/${id}`,
+          {
+            username,
+            email,
+            notification: notificationEnabled,
+            newPassword: password,
+            confirmPassword,
+          }
+        );
       } else {
-        response = await axios.put(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/${id}`, {
-          username,
-          email,
-          notification: notificationEnabled,
-        });
+        response = await axios.put(
+          `https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/${id}`,
+          {
+            username,
+            email,
+            notification: notificationEnabled,
+          }
+        );
       }
 
       if (response.data.success === true) {
-        localStorage.setItem('email', email);
-        localStorage.setItem('username', username);
+        localStorage.setItem("email", email);
+        localStorage.setItem("username", username);
         toast("Settings changed");
       } else {
         const { message } = response.data;
         setErrors({});
-        if (message === 'Password and confirmPassword do not match') {
-          setErrors((prevErrors) => ({ ...prevErrors, password: 'Password and confirmPassword do not match' }));
+        if (message === "Password and confirmPassword do not match") {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: "Password and confirmPassword do not match",
+          }));
         }
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      setErrors({ general: 'An error occurred. Please try again later.' });
+      console.error("Error during login:", error);
+      setErrors({ general: "An error occurred. Please try again later." });
     }
   };
 
@@ -174,10 +183,13 @@ const Settings = () => {
                         name="fir"
                         id="fir"
                         autocomplete="given-name"
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${errors.password ? 'border-red-500' : ''
-                          }`}
+                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                          errors.password ? "border-red-500" : ""
+                        }`}
                       />
-                      {errors.password && <p className="text-red-600">{errors.password}</p>}
+                      {errors.password && (
+                        <p className="text-red-600">{errors.password}</p>
+                      )}
                     </div>
                   </div>
 

@@ -41,7 +41,7 @@ const AddWorkspaceModal = ({ isOpen, closeModal }) => {
     >
       <div className="w-2/5 bg-white p-4 rounded-xl border border-gray-300">
         <h2 className="text-2xl mb-4 border-b font-bold border-gray-900/10 pb-2">
-          Create New Workspace
+          Create New Project
         </h2>
         <form onSubmit={handleSubmit}>
           <label className="mb-2 block font-semibold">
