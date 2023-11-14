@@ -1,33 +1,65 @@
 import React from "react";
-import { CiCirclePlus } from "react-icons/ci";
-import { useState } from "react";
-import AddTaskModal from "../component/addTaskModal";
 
 function DashboardContent() {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const projects = [
+    { id: 1, name: "Flutter", description: "10/04/2023" },
+    { id: 2, name: "Web app", description: "10/04/2023" },
+    { id: 3, name: "Angular project", description: "10/04/2023" },
+    { id: 4, name: "C++", description: "10/04/2023" },
+    { id: 5, name: "Python scraping", description: "10/04/2023" },
+    { id: 6, name: "Projec test", description: "10/04/2023" },
+    { id: 7, name: "EIP Project", description: "10/04/2023" },
+    { id: 8, name: "Project 8", description: "10/04/2023" },
+    { id: 9, name: "Project 9", description: "10/04/2023" },
+    { id: 10, name: "Project 10", description: "10/04/2023" },
+    { id: 11, name: "Project 11", description: "10/04/2023" },
+    { id: 12, name: "Project 12", description: "10/04/2023" },
+  ];
 
-  const handleOpenModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalIsOpen(false);
-  };
+  const avatars = ["UT", "AB", "CD", "EF", "GH"];
 
   return (
-    <div className="w-full bg-black">
-      <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-20">
-        <button
-          onClick={handleOpenModal}
-          className="flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  rounded-xl"
-        >
-          <CiCirclePlus size={25} />
-          <span className="ml-2">Nouvelle tâche</span>
-        </button>
+    <div className="w-full">
+      <div className="bg-indigo-500 rounded-lg shadow-md p-2 m-2">
+        <h1 className="text-white text-2xl font-bold">Choose a project</h1>
       </div>
-      {modalIsOpen && (
-        <AddTaskModal isOpen={modalIsOpen} closeModal={handleCloseModal} />
-      )}
+
+      <div className="flex flex-wrap justify-center h-screen">
+        {projects.map((project) => (
+          <div key={project.id} className="relative md:w-1/2 p-2 h-1/4">
+            <div className="bg-white hover:bg-indigo-50 border-2 border-indigo-500 h-full overflow-hidden shadow-2xl rounded-3xl shadow-slate-600 relative">
+              <div className="p-4">
+                <h2 className="text-indigo-500 font-bold text-2xl">
+                  {project.name}
+                </h2>
+                <p className="mt-2 text-gray-600 italic">
+                  {project.description}
+                </p>
+              </div>
+
+              <div className="absolute bottom-2 right-2 flex flex-row">
+                {avatars.slice(0, 3).map((avatar, index) => (
+                  <div
+                    key={index}
+                    className="w-8 h-8 rounded-full bg-indigo-400 text-white flex justify-center items-center text-sm font-bold"
+                    style={{ zIndex: avatars.length - index }}
+                  >
+                    {avatar}
+                  </div>
+                ))}
+                {avatars.length > 3 && (
+                  <div
+                    className="w-8 h-8 rounded-full bg-indigo-100 text-white flex justify-center items-center text-sm font-bold"
+                    style={{ zIndex: avatars.length - 3 }}
+                  >
+                    +{avatars.length - 3}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

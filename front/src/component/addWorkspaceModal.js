@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 
-const AddWorkspaceModal = ({ isOpen, closeModal }) => {
+const AddWorkspaceModal = ({ isOpen, onClose }) => {
   const [workSpaceName, setWorkspaceName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -29,28 +29,32 @@ const AddWorkspaceModal = ({ isOpen, closeModal }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Do something with workSpaceName and selectedUsers
-    closeModal();
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={closeModal}
+      onRequestClose={onClose}
+      style={{
+        overlay: {
+          zIndex: 9999, // Set a higher value for zIndex
+        },
+      }}
       className="flex items-center justify-center h-screen"
     >
-      <div className="w-2/5 bg-white p-4 rounded-xl border border-gray-300">
-        <h2 className="text-2xl mb-4 border-b font-bold border-gray-900/10 pb-2">
-          Create New Project
-        </h2>
+      <div className="md:w-2/5 bg-white p-4 rounded-xl border border-gray-300">
+        <div className="bg-indigo-500 rounded-lg shadow-md p-2">
+          <h1 className="text-white text-2xl font-bold">Create new project</h1>
+        </div>
         <form onSubmit={handleSubmit}>
-          <label className="mb-2 block font-semibold">
-            Workspace Name:
+          <label className="border-t my-2 border-gray-900/10 mb-2 block font-semibold">
+            Project Name:
             <input
               type="text"
               value={workSpaceName}
               onChange={(event) => setWorkspaceName(event.target.value)}
-              className="border border-gray-300 rounded w-full p-2"
+              className="border border-gray-300 font-normal rounded w-full p-2"
             />
           </label>
 
@@ -71,7 +75,7 @@ const AddWorkspaceModal = ({ isOpen, closeModal }) => {
                       onChange={() => {
                         handleUserSelect(user.id);
                       }}
-                      className="form-checkbox accent-indigo-600"
+                      className="form-checkbox accent-indigo-500"
                     />
                   </label>
                 </div>
@@ -82,15 +86,15 @@ const AddWorkspaceModal = ({ isOpen, closeModal }) => {
             <button
               type="button"
               class="text-sm font-semibold leading-6 text-gray-900"
-              onClick={closeModal}
+              onClick={onClose}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Create Workspace
+              Create Project
             </button>
           </div>
         </form>
