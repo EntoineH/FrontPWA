@@ -20,7 +20,7 @@ function DashboardContent() {
 
   return (
     <div className="w-full">
-      <div className="bg-indigo-500 rounded-lg shadow-md p-2 m-2">
+      <div className="bg-indigo-500 rounded-xl shadow-md p-2 m-2">
         <h1 className="text-white text-2xl font-bold">Choose a project</h1>
       </div>
 

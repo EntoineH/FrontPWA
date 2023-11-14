@@ -44,11 +44,11 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
       className="flex items-center justify-center h-screen"
     >
       <div className="md:w-2/5 bg-white p-4 rounded-xl border border-gray-300">
-        <div className="bg-indigo-500 rounded-lg shadow-md p-2">
+        <div className="bg-indigo-500 rounded-xl shadow-md p-2">
           <h1 className="text-white text-2xl font-bold">Create new project</h1>
         </div>
         <form onSubmit={handleSubmit}>
-          <label className="border-t my-2 border-gray-900/10 mb-2 block font-semibold">
+          <label className="border-t my-3 border-gray-900/10 mb-2 block font-semibold">
             Project Name:
             <input
               type="text"
@@ -64,7 +64,7 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
               {allUsers.map((user) => (
                 <div
                   key={user.id}
-                  className="m-2 flex justify-between rounded items-center border hover:border-indigo-600 p-1 bg-gray-50 hover:bg-indigo-200"
+                  className="m-2 flex justify-between rounded items-center border hover:border-indigo-500 p-1 bg-gray-50 hover:bg-indigo-100"
                   onClick={() => handleUserSelect(user.id)}
                 >
                   <span className="text-sm font-medium">{user.name}</span>
@@ -92,7 +92,7 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
             </button>
             <button
               type="submit"
-              className="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Create Project
             </button>

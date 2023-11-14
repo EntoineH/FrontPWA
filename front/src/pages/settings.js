@@ -111,11 +111,11 @@ const Settings = () => {
   return (
     <div class="md:h-screen h-fit flex">
       <div class="w-full  m-4 flex items-center">
-        <div class="mx-1 my-4 md:h-fit bg-white w-full shadow-2xl rounded-3xl shadow-slate-600">
+        <div class="mx-1 my-4 md:h-fit bg-white border border-gray-200 w-full shadow-2xl rounded-3xl shadow-slate-600">
           <ToastContainer />
-          <h1 class="mx-3 mt-3 text-xl font-bold border-b border-gray-900/10 pb-2">
-            Edit Profile
-          </h1>
+          <div className="bg-indigo-500 rounded-xl shadow-md p-2 m-2">
+            <h1 className="text-white text-xl font-bold">Edit profil</h1>
+          </div>
           <form onSubmit={handleSave}>
             <div class="m-3">
               <div class="border-b border-gray-900/10 pb-6">
@@ -282,7 +282,7 @@ const Settings = () => {
             <div class="m-3 flex items-center justify-end gap-x-6">
               <button
                 type="submit"
-                class="rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                class="rounded-xl bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Save
               </button>
