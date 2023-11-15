@@ -69,4 +69,39 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// service-worker.js
+
+const cacheName = 'my-cache-v1';
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(cacheName).then((cache) => {
+      return cache.addAll([
+        // Add other files to cache if needed
+      ]);
+    })
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      return (
+        cachedResponse ||
+        fetch(event.request).then((response) => {
+          if (event.request.method === 'GET') {
+            // Cache the GET request response
+            const clone = response.clone();
+            caches.open(cacheName).then((cache) => {
+              cache.put(event.request, clone);
+            });
+          }
+          return response;
+        })
+      );
+    })
+  );
+});
+
+
 // Any other custom service worker logic can go here.
