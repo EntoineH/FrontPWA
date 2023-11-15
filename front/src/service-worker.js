@@ -108,9 +108,7 @@ self.addEventListener("fetch", (event) => {
 // Any other custom service worker logic can go here.
 // Add push notification handling
 self.addEventListener("push", (event) => {
-  const options = {
-    body: event.data.text(),
-  };
+  const options = event.data.json().notification;
 
   event.waitUntil(self.registration.showNotification("OrganizeMe", options));
 });
