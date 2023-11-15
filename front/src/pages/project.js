@@ -1,95 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, Typography } from "@material-tailwind/react";
 //import * as cgIcon from "react-icons/cg";
 import { CiCirclePlus } from "react-icons/ci";
+import { CgChevronLeft } from "react-icons/cg";
+import { BsPencil } from "react-icons/bs"; 
 import Column from "../component/columnTask";
 import Task from "../component/task";
+import UpdateWorkspaceModal from "../component/updateWorkspaceModal";
+
 
 //ajouter les boutons pour editer et supprimer les taches
 
 const Project = (project, onClose) => {
-  console.log("project === ", project)
-  const tasks = [
-    {
-      id: 1,
-      title: "Tâche 1 test",
-      date: "2023-01-01",
-      collaborators: [
-        { id: 1, name: "Utilisateur 1", avatar: "/path/to/avatar1.jpg" },
-      ],
-      status: 0,
-    },
-    {
-      id: 2,
-      title: "Tâche 2",
-      date: "2023-01-02",
-      collaborators: [
-        { id: 1, name: "Utilisateur 1", avatar: "/path/to/avatar1.jpg" },
-      ],
-      status: 1,
-    },
-    {
-      id: 3,
-      title: "Tâche 3",
-      date: "2023-01-03",
-      collaborators: [
-        { id: 1, name: "Utilisateur 1", avatar: "/path/to/avatar1.jpg" },
-      ],
-      status: 2,
-    },
-    // ... Ajoutez d'autres tâches
-  ];
+  const [showUpdateWorkspaceModal, setShowUpdateWorkspaceModal] = useState(false);
+  const tasks = project.project.tasks
+
+  const openUpdateWorkspaceModal = () => {
+    setShowUpdateWorkspaceModal(true);
+  };
+
+  const closeUpdateWorkspaceModal = () => {
+    setShowUpdateWorkspaceModal(false);
+  };
 
   const tasksByStatus = tasks.reduce(
     (acc, task) => {
-      acc[task.status].push(task);
+      acc[task.state].push(task);
       return acc;
     },
     [[], [], []]
   );
 
-  const projectName = "Nom du Projet"; // Remplacez cela par le nom de votre projet
-
-  // Exemple d'utilisateurs affiliés au projet
-  const projectMembers = [
-    { id: 1, name: "Utilisateur 1", avatar: "/path/to/avatar1.jpg" },
-    { id: 2, name: "Utilisateur 2", avatar: "/path/to/avatar2.jpg" },
-    // ... Ajoutez d'autres utilisateurs au besoin
-  ];
-
   return (
     <div className="p-8">
-      <Typography variant="h1" color="blue-gray" className="mb-4">
-        {project.project.title}
-      </Typography>
+      <div
+        className="cursor-pointer mb-4"
+        onClick={project.onClose}
+      >
+        <CgChevronLeft size={25} />
+      </div>
+      <div className="flex items-center mb-4">
+        <Typography variant="h1" color="blue-gray">
+          {project.project.title}
+        </Typography>
+        <button
+          className="ml-2 p-1 hover:bg-gray-200 rounded-full"
+          onClick={openUpdateWorkspaceModal}
+        >
+          <BsPencil size={20} />
+        </button>
+      </div>
 
-      <div className="flex space-x-4 mb-6">
-        {projectMembers.map((member) => (
-          <Avatar
-            key={member.id}
-            src={member.avatar}
-            alt={member.name}
-            size="lg"
-          />
+      <div className="flex flex-row ">
+        {project.project.users.map((user, index) => (
+          <div
+            key={index}
+            className="w-8 h-8 rounded-full bg-indigo-400 text-white flex justify-center items-center text-sm font-bold"
+            title={user.username}
+          >
+            {user.username.substring(0, 1).toUpperCase()}
+          </div>
         ))}
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        {[0, 1, 2].map((status) => (
+        {[0, 1, 2].map((state) => (
           <Column
-            key={status}
+            key={state}
             title={
-              status === 0 ? "À Faire" : status === 1 ? "En cours" : "Terminé"
+              state === 0 ? "À Faire" : state === 1 ? "En cours" : "Terminé"
             }
           >
-            {tasksByStatus[status].map((task) => (
+            {tasksByStatus[state].map((task) => (
               <Task
                 key={task.id}
                 title={task.title}
-                date={task.date}
-                collaborators={task.collaborators}
-                status={task.status}
-                onStatusChange={() => {}}
+                date={new Date(task.dueDate).toLocaleDateString()}
+                collaborators={task.users}
+                status={task.state}
+                onStatusChange={() => { }}
               />
             ))}
           </Column>
@@ -102,6 +91,15 @@ const Project = (project, onClose) => {
           <span className="ml-2">Nouvelle tâche</span>
         </button>
       </div>
+      {showUpdateWorkspaceModal && (
+        <UpdateWorkspaceModal
+          isOpen={showUpdateWorkspaceModal}
+          onClose={closeUpdateWorkspaceModal}
+          usersInProject={project.project.users.map(user => user._id)}
+          projectTitle={project.project.title}
+          projectId={project.project._id}
+        />
+      )}
     </div>
   );
 };

@@ -10,7 +10,18 @@ const Task = ({ title, date, collaborators, status, onStatusChange }) => {
       <Typography variant="body2" color="gray">
         Date: {date}
       </Typography>
-      <div className="flex items-center space-x-2 mt-2">
+      <div className="flex flex-row ">
+        {collaborators.map((collaborator, index) => (
+          <div
+            key={index}
+            className="w-8 h-8 rounded-full bg-indigo-400 text-white flex justify-center items-center text-sm font-bold"
+            title={collaborator.username}
+          >
+            {collaborator.username.substring(0, 1).toUpperCase()}
+          </div>
+        ))}
+      </div>
+      {/* <div className="flex items-center space-x-2 mt-2">
         {collaborators.map((collaborator) => (
           <Avatar
             key={collaborator.id}
@@ -19,7 +30,7 @@ const Task = ({ title, date, collaborators, status, onStatusChange }) => {
             size="sm"
           />
         ))}
-      </div>
+      </div> */}
       <div className="flex justify-end mt-4">
         <Button
           color="blue"
