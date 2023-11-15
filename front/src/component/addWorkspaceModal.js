@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
+import axios from 'axios'
 
 const AddWorkspaceModal = ({ isOpen, onClose }) => {
-  const [workSpaceName, setWorkspaceName] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const id = localStorage.getItem("id")
+  const [title, setTitle] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([id]);
+  const [users, setUsers] = useState([]);
 
-  const allUsers = [
-    { id: 1, name: "Albert Camé" },
-    { id: 2, name: "Fedro Dos" },
-    { id: 3, name: "Ulrick le Fric" },
-    { id: 4, name: "Tipate Undent" },
-    { id: 5, name: "Robert Camenbert" },
-    { id: 6, name: "Luc Cul" },
-
-    // Add more users as needed
-  ];
+  useEffect(() => {
+    console.log("id === ", id)
+    axios.get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/except/${id}`)
+      .then((response) => {
+        if (response.data.success === true) {
+          setUsers(response.data.message)
+        }
+      })
+  }, []);
 
   const handleUserSelect = (userId) => {
     // Toggle user selection
@@ -25,11 +27,21 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
         return [...prevUsers, userId];
       }
     });
+    console.log(selectedUsers)
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onClose();
+    axios.post('https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects', {
+      title,
+      "users": selectedUsers
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          onClose();
+          window.location.reload(false)
+        }
+      })
   };
 
   return (
@@ -52,8 +64,8 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
             Project Name:
             <input
               type="text"
-              value={workSpaceName}
-              onChange={(event) => setWorkspaceName(event.target.value)}
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
               className="border border-gray-300 font-normal rounded w-full p-2"
             />
           </label>
@@ -61,19 +73,19 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
           <label className="block mb-2 font-semibold">
             Select collaborators:
             <div className="border bg-gray-50 border-gray-300 rounded  max-h-40 overflow-y-auto">
-              {allUsers.map((user) => (
+              {users.map((user) => (
                 <div
-                  key={user.id}
+                  key={user._id}
                   className="m-2 flex justify-between rounded items-center border hover:border-indigo-500 p-1 bg-gray-50 hover:bg-indigo-100"
-                  onClick={() => handleUserSelect(user.id)}
+                  onClick={() => handleUserSelect(user._id)}
                 >
-                  <span className="text-sm font-medium">{user.name}</span>
+                  <span className="text-sm font-medium">{user.username}</span>
                   <label className="inline-flex items-center">
                     <input
                       type="checkbox"
-                      checked={selectedUsers.includes(user.id)}
+                      checked={selectedUsers.includes(user._id)}
                       onChange={() => {
-                        handleUserSelect(user.id);
+                        handleUserSelect(user._id);
                       }}
                       className="form-checkbox accent-indigo-500"
                     />

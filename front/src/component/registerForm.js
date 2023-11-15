@@ -41,6 +41,7 @@ function RegisterForm() {
                     localStorage.setItem('id', response.data.user._id);
                     localStorage.setItem('email', response.data.user.email);
                     localStorage.setItem('username', response.data.user.username);
+                    localStorage.setItem('projects', response.data.user.projects);
                     navigate('/dashboard');
                 } else {
                     const { message } = response.data;
