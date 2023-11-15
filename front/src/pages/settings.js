@@ -137,13 +137,10 @@ const Settings = () => {
           "BOUfXxr7xEFzcjeXmvOFvbdsXosthzgbO5pyAUTWJ76XQ2fOLP0iau6ptvpdNyOVf-inaM3JIr9dXIE5f3oV3uE"
         ),
       });
-      console.log("subscription = " + subscription);
-      console.log("subscriptionJSON = " + JSON.stringify(subscription));
-      console.log("subscriptionEndpoint = " + subscription.endpoint);
-      console.log("fe bourééééé");
+
       axios
         .post("https://pwa-backend-2c14dae9b4e4.herokuapp.com/souscrire", {
-          subscription: JSON.stringify(subscription),
+          subscription: subscription,
         })
         .then((response) => {
           console.log(response);
