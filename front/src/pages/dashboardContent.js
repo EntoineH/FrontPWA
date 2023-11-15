@@ -57,6 +57,7 @@ function DashboardContent() {
                     key={index}
                     className="w-8 h-8 rounded-full bg-indigo-400 text-white flex justify-center items-center text-sm font-bold"
                     style={{ zIndex: project.users.length - index }}
+                    title={user.username}
                   >
                     {user.username.substring(0, 1).toUpperCase()}
                   </div>
