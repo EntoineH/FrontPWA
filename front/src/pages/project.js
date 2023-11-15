@@ -3,19 +3,19 @@ import { Avatar, Typography } from "@material-tailwind/react";
 //import * as cgIcon from "react-icons/cg";
 import { CiCirclePlus } from "react-icons/ci";
 import { CgChevronLeft } from "react-icons/cg";
-import { BsPencil } from "react-icons/bs"; 
+import { BsPencil } from "react-icons/bs";
 import Column from "../component/columnTask";
 import Task from "../component/task";
 import UpdateWorkspaceModal from "../component/updateWorkspaceModal";
 import AddTaskModal from "../component/addTaskModal";
 
-
 //ajouter les boutons pour editer et supprimer les taches
 
 const Project = (project, onClose) => {
-  const [showUpdateWorkspaceModal, setShowUpdateWorkspaceModal] = useState(false);
+  const [showUpdateWorkspaceModal, setShowUpdateWorkspaceModal] =
+    useState(false);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-  const tasks = project.project.tasks
+  const tasks = project.project.tasks;
 
   const openUpdateWorkspaceModal = () => {
     setShowUpdateWorkspaceModal(true);
@@ -33,7 +33,6 @@ const Project = (project, onClose) => {
     setShowAddTaskModal(false);
   };
 
-
   const tasksByStatus = tasks.reduce(
     (acc, task) => {
       acc[task.state].push(task);
@@ -44,10 +43,7 @@ const Project = (project, onClose) => {
 
   return (
     <div className="p-8">
-      <div
-        className="cursor-pointer mb-4"
-        onClick={project.onClose}
-      >
+      <div className="cursor-pointer mb-4" onClick={project.onClose}>
         <CgChevronLeft size={25} />
       </div>
       <div className="flex items-center mb-4">
@@ -88,7 +84,7 @@ const Project = (project, onClose) => {
                 title={task.title}
                 date={task.dueDate}
                 collaborators={task.users}
-                onStatusChange={() => { }}
+                onStatusChange={() => {}}
                 taskId={task._id}
                 usersInProject={project.project.users}
                 state={task.state}
@@ -99,7 +95,10 @@ const Project = (project, onClose) => {
       </div>
 
       <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-20">
-        <button onClick={openAddTaskModal} className="flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  rounded-xl">
+        <button
+          onClick={openAddTaskModal}
+          className="flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  rounded-xl"
+        >
           <CiCirclePlus size={25} />
           <span className="ml-2">New task</span>
         </button>
@@ -108,7 +107,7 @@ const Project = (project, onClose) => {
         <UpdateWorkspaceModal
           isOpen={showUpdateWorkspaceModal}
           onClose={closeUpdateWorkspaceModal}
-          usersInProject={project.project.users.map(user => user._id)}
+          usersInProject={project.project.users.map((user) => user._id)}
           projectTitle={project.project.title}
           projectId={project.project._id}
         />

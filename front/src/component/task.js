@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { Button, Typography } from "@material-tailwind/react";
-import axios from 'axios'
+import axios from "axios";
 import UpdateTaskModal from "../component/updateTaskModal";
 
-const Task = ({ title, date, collaborators, taskId, usersInProject, state }) => {
-
+const Task = ({
+  title,
+  date,
+  collaborators,
+  taskId,
+  usersInProject,
+  state,
+}) => {
   const deleteTask = () => {
-    axios.delete(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks/${taskId}`)
+    axios
+      .delete(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks/${taskId}`)
       .then((response) => {
         if (response.data.success === true) {
-          window.location.reload(false)
+          window.location.reload(false);
         }
-      })
+      });
   };
 
   const [showUpdateTaskModal, setShowUpdateTaskModal] = useState(false);
@@ -71,7 +78,7 @@ const Task = ({ title, date, collaborators, taskId, usersInProject, state }) => 
           onClose={closeUpdateTaskModal}
           usersInProject={usersInProject}
           taskId={taskId}
-          usersInTask={collaborators.map(collaborator => collaborator._id)}
+          usersInTask={collaborators.map((collaborator) => collaborator._id)}
           taskTitle={title}
           taskDate={date}
           taskState={state}

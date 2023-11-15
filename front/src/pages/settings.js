@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { json } from "react-router-dom";
 
 const Settings = () => {
   const [notificationEnabled, setNotificationEnabled] = useState(false);
@@ -92,19 +93,89 @@ const Settings = () => {
     }
   }, []);
 
-  const handleCheckboxChange = () => {
-    // Toggle notification state
+  const handleCheckboxChange = async () => {
     setNotificationEnabled(!notificationEnabled);
 
-    // Request notification permission
+    // Request notification permission if enabling notifications
     if (!notificationEnabled) {
-      Notification.requestPermission().then((permission) => {
+      try {
+        const permission = await Notification.requestPermission();
         if (permission === "granted") {
           setNotificationEnabled(true);
+          subscribeUserToPush();
         } else {
           setNotificationEnabled(false);
         }
+      } catch (error) {
+        console.error("Error requesting notification permission:", error);
+        setNotificationEnabled(false);
+      }
+    }
+  };
+
+  function urlBase64ToUint8Array(base64String) {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+    const rawData = window.atob(base64);
+    const buffer = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      buffer[i] = rawData.charCodeAt(i);
+    }
+
+    return buffer;
+  }
+
+  const subscribeUserToPush = () => {
+    navigator.serviceWorker.ready.then(async (registration) => {
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(
+          "BOUfXxr7xEFzcjeXmvOFvbdsXosthzgbO5pyAUTWJ76XQ2fOLP0iau6ptvpdNyOVf-inaM3JIr9dXIE5f3oV3uE"
+        ),
       });
+      console.log("subscription = " + subscription);
+      console.log("subscriptionJSON = " + JSON.stringify(subscription));
+      console.log("subscriptionEndpoint = " + subscription.endpoint);
+      console.log("fe bourééééé");
+      axios
+        .post("https://pwa-backend-2c14dae9b4e4.herokuapp.com/souscrire", {
+          subscription: JSON.stringify(subscription),
+        })
+        .then((response) => {
+          console.log(response);
+        });
+    });
+  };
+
+  const showNotification = (message) => {
+    // Check if the Notification API is supported
+    if ("Notification" in window) {
+      // Check if the user has granted permission
+      if (Notification.permission === "granted") {
+        // Display the notification
+        const options = {
+          body: message,
+        };
+
+        new Notification("OrganizeMe", options);
+      }
+    }
+  };
+
+  const handleButtonClick = () => {
+    // Check if push notifications are enabled
+    console.log("fb");
+    if (notificationEnabled) {
+      console.log("ok");
+      // Assuming some event triggers this, you can customize the message
+      showNotification("Button Clicked! You can customize this message.");
+    } else {
+      // Optionally, provide user feedback about disabled notifications
+      console.log("Notifications are not enabled");
     }
   };
 
@@ -290,6 +361,7 @@ const Settings = () => {
           </form>
         </div>
       </div>
+      <button onClick={handleButtonClick}>Trigger Notification</button>
     </div>
   );
 };
