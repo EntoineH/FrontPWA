@@ -1,14 +1,36 @@
-import React from "react";
-import { Avatar, Button, Typography } from "@material-tailwind/react";
+import React, { useState } from "react";
+import { Button, Typography } from "@material-tailwind/react";
+import axios from 'axios'
+import UpdateTaskModal from "../component/updateTaskModal";
 
-const Task = ({ title, date, collaborators, status, onStatusChange }) => {
+const Task = ({ title, date, collaborators, taskId, usersInProject, state }) => {
+
+  const deleteTask = () => {
+    axios.delete(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks/${taskId}`)
+      .then((response) => {
+        if (response.data.success === true) {
+          window.location.reload(false)
+        }
+      })
+  };
+
+  const [showUpdateTaskModal, setShowUpdateTaskModal] = useState(false);
+
+  const openUpdateTaskModal = () => {
+    setShowUpdateTaskModal(true);
+  };
+
+  const closeUpdateTaskModal = () => {
+    setShowUpdateTaskModal(false);
+  };
+
   return (
     <div className="p-4 bg-white shadow-md rounded-md">
       <Typography variant="h6" color="blue-gray" className="mb-2">
         {title}
       </Typography>
       <Typography variant="body2" color="gray">
-        Date: {date}
+        Date: {new Date(date).toLocaleDateString()}
       </Typography>
       <div className="flex flex-row ">
         {collaborators.map((collaborator, index) => (
@@ -21,26 +43,40 @@ const Task = ({ title, date, collaborators, status, onStatusChange }) => {
           </div>
         ))}
       </div>
-      {/* <div className="flex items-center space-x-2 mt-2">
-        {collaborators.map((collaborator) => (
-          <Avatar
-            key={collaborator.id}
-            src={collaborator.avatar}
-            alt={collaborator.name}
-            size="sm"
-          />
-        ))}
-      </div> */}
-      <div className="flex justify-end mt-4">
-        <Button
-          color="blue"
-          onClick={onStatusChange}
-          ripple="light"
-          className="rounded-full"
-        >
-          State
-        </Button>
+      <div className="flex flex-row space-x-4">
+        <div className="flex justify-end mt-4">
+          <Button
+            color="blue"
+            onClick={openUpdateTaskModal}
+            ripple="light"
+            className="rounded-full"
+          >
+            Modify
+          </Button>
+        </div>
+        <div className="flex justify-end mt-4">
+          <Button
+            color="red"
+            onClick={deleteTask}
+            ripple="light"
+            className="rounded-full"
+          >
+            Delete
+          </Button>
+        </div>
       </div>
+      {showUpdateTaskModal && (
+        <UpdateTaskModal
+          isOpen={showUpdateTaskModal}
+          onClose={closeUpdateTaskModal}
+          usersInProject={usersInProject}
+          taskId={taskId}
+          usersInTask={collaborators.map(collaborator => collaborator._id)}
+          taskTitle={title}
+          taskDate={date}
+          taskState={state}
+        />
+      )}
     </div>
   );
 };

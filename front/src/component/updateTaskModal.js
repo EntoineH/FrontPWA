@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import axios from 'axios'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
+const UpdateTaskModal = ({ isOpen, onClose, usersInProject, taskId, usersInTask, taskTitle, taskDate, taskState }) => {
 
-  const [title, setTitle] = useState("");
-  const [state, setState] = useState(0);
-  const [dueDate, setDueDate] = useState(new Date());
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [title, setTitle] = useState(taskTitle);
+  const [state, setState] = useState(taskState);
+  const [dueDate, setDueDate] = useState(new Date(taskDate));
+  const [selectedUsers, setSelectedUsers] = useState(usersInTask);
   const [users, setUsers] = useState(usersInProject);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -31,12 +31,12 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
       setErrorMessage("Please select at least one collaborator.");
       return;
     }
-    axios.post('https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks', {
+    axios.put(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks/${taskId}`, {
       title,
       "users": selectedUsers,
       dueDate,
       state,
-      "project": projectId
+      "project": taskId
     })
       .then((response) => {
         if (response.data.success === true) {
@@ -135,7 +135,7 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
               type="submit"
               className="rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Add Task
+              Update Task
             </button>
           </div>
         </form>
@@ -144,4 +144,4 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
   );
 };
 
-export default AddTaskModal;
+export default UpdateTaskModal;
