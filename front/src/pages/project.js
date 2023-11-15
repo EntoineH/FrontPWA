@@ -7,7 +7,8 @@ import Task from "../component/task";
 
 //ajouter les boutons pour editer et supprimer les taches
 
-const Project = () => {
+const Project = (project, onClose) => {
+  console.log("project === ", project)
   const tasks = [
     {
       id: 1,
@@ -59,7 +60,7 @@ const Project = () => {
   return (
     <div className="p-8">
       <Typography variant="h1" color="blue-gray" className="mb-4">
-        {projectName}
+        {project.project.title}
       </Typography>
 
       <div className="flex space-x-4 mb-6">
