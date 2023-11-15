@@ -7,6 +7,7 @@ import SideBar from "../component/sidebar.js";
 import { IconButton } from "@material-tailwind/react";
 import * as cgIcon from "react-icons/cg";
 import AddWorkspaceModal from "../component/addWorkspaceModal";
+import Project from "./project.js";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -18,6 +19,8 @@ const Dashboard = () => {
       setActiveTab("dashboard");
     } else if (activeTab === "settings") {
       setActiveTab("settings");
+    } else if (activeTab === "project") {
+      setActiveTab("project");
     }
   }, [activeTab]);
 
@@ -55,6 +58,7 @@ const Dashboard = () => {
       <div className="w-4/5">
         {activeTab === "dashboard" && <DashboardContent />}
         {activeTab === "settings" && <Settings />}
+        {activeTab === "project" && <Project />}
       </div>
       {showAddWorkspaceModal && (
         <AddWorkspaceModal

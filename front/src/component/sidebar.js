@@ -96,7 +96,9 @@ function SideBar({
           </ListItem>
           <AccordionBody className="py-1">
             <List className="p-0">
-              <ListItem>Analytics</ListItem>
+              <ListItem onClick={() => onTabChange("project")}>
+                Project 1
+              </ListItem>
             </List>
           </AccordionBody>
         </Accordion>
