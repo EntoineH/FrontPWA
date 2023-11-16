@@ -59,6 +59,7 @@ const UpdateTaskModal = ({
               users: users.filter((user) => selectedUsers.includes(user._id)),
               dueDate,
               state,
+              _id: taskId,
             },
           });
           onClose();
