@@ -15,9 +15,7 @@ const Project = (project, onClose) => {
   const [showUpdateWorkspaceModal, setShowUpdateWorkspaceModal] =
     useState(false);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-  // const [tasks, setTasks] = useState(project.project.tasks);
-  // const [tasks, setTasks] = useState(project.project.tasks);
-  const tasks = project.project.tasks
+  const [tasks, setTasks] = useState(project.project.tasks);
 
   const openUpdateWorkspaceModal = () => {
     setShowUpdateWorkspaceModal(true);
@@ -38,24 +36,20 @@ const Project = (project, onClose) => {
   const handleDeleteTask = (taskId) => {
     // Logic to delete the task from tasks array in state
     const updatedTasks = tasks.filter((task) => task._id !== taskId);
-    // setTasks(updatedTasks);
+    setTasks(updatedTasks);
   };
   const handleUpdateTask = ({ id, updatedTask }) => {
     // Update the task in tasks array based on the id
-    // const newProject = [...project]
-    project.project.tasks.map((task) =>
+    const updatedTasks = tasks.map((task) =>
       task._id === id ? updatedTask : task
     );
-    // setproject(newProject);
+    setTasks(updatedTasks);
   };
 
   const handleUpdateTaskList = (newTask) => {
     // Add the new task to the tasks array
-    // const updatedTasks = [...tasks, newTask];
-    // const newProject = [...project]
-    project.project.tasks.push(newTask)
-    // setproject(newProject);
-    // setTasks(updatedTasks);
+    const updatedTasks = [...tasks, newTask];
+    setTasks(updatedTasks);
   };
 
   const tasksByStatus = tasks.reduce(
