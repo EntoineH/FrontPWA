@@ -29,6 +29,8 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log("Project Name:", workSpaceName);
+    console.log("Selected Users:", selectedUsers);
     onClose();
   };
 
@@ -85,7 +87,7 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
           <div class="pt-2 flex items-center justify-end gap-x-6">
             <button
               type="button"
-              class="text-sm font-semibold leading-6 text-gray-900"
+              class="rounded-xl bg-white hover:bg-indigo-50 px-3 py-2 text-sm font-semibold leading-6 text-gray-900"
               onClick={onClose}
             >
               Cancel

@@ -18,6 +18,10 @@ function DashboardContent() {
 
   const avatars = ["UT", "AB", "CD", "EF", "GH"];
 
+  const handleProjectClick = (id, name) => {
+    console.log(`Clicked on project ${id}: ${name}`);
+  };
+
   return (
     <div className="w-full">
       <div className="bg-indigo-500 rounded-xl shadow-md p-2 m-2">
@@ -26,7 +30,11 @@ function DashboardContent() {
 
       <div className="flex flex-wrap justify-center h-screen">
         {projects.map((project) => (
-          <div key={project.id} className="relative md:w-1/2 p-2 h-1/4">
+          <div
+            key={project.id}
+            className="relative md:w-1/2 w-full p-2 md:h-1/4 h-1/5"
+            onClick={() => handleProjectClick(project.id, project.name)}
+          >
             <div className="bg-white hover:bg-indigo-50 border-2 border-indigo-500 h-full overflow-hidden shadow-2xl rounded-3xl shadow-slate-600 relative">
               <div className="p-4">
                 <h2 className="text-indigo-500 font-bold text-2xl">

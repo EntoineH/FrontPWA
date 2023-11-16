@@ -111,7 +111,7 @@ const Settings = () => {
   return (
     <div class="md:h-screen h-fit flex">
       <div class="w-full  m-4 flex items-center">
-        <div class="mx-1 my-4 md:h-fit bg-white border border-gray-200 w-full shadow-2xl rounded-3xl shadow-slate-600">
+        <div class="mx-1 my-4 md:h-fit bg-white border border-gray-300 w-full shadow-2xl rounded-3xl shadow-slate-600">
           <ToastContainer />
           <div className="bg-indigo-500 rounded-xl shadow-md p-2 m-2">
             <h1 className="text-white text-xl font-bold">Edit profil</h1>
