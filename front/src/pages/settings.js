@@ -138,11 +138,10 @@ const Settings = () => {
       });
 
       axios
-        .post("https://pwa-backend-2c14dae9b4e4.herokuapp.com/souscrire", {
+        .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/subscribe/${id}`, {
           subscription: subscription,
         })
         .then((response) => {
-          console.log(response);
         });
     });
   };
@@ -222,9 +221,8 @@ const Settings = () => {
                         name="fir"
                         id="fir"
                         autocomplete="given-name"
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                          errors.password ? "border-red-500" : ""
-                        }`}
+                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${errors.password ? "border-red-500" : ""
+                          }`}
                       />
                       {errors.password && (
                         <p className="text-red-600">{errors.password}</p>
@@ -287,28 +285,6 @@ const Settings = () => {
                           </label>
                           <p class="text-gray-500">
                             Receive all push notifications.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div class="relative flex gap-x-3">
-                        <div class="flex h-6 items-center">
-                          <input
-                            id="noNotifications"
-                            name="noNotifications"
-                            type="checkbox"
-                            class="h-4 w-4 rounded border-gray-300 accent-indigo-600"
-                          />
-                        </div>
-                        <div class="text-sm leading-6">
-                          <label
-                            for="noNotifications"
-                            class="font-medium text-gray-900"
-                          >
-                            No push notifications
-                          </label>
-                          <p class="text-gray-500">
-                            Don't receive any push notifications.
                           </p>
                         </div>
                       </div>
