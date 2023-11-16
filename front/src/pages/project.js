@@ -58,10 +58,6 @@ const Project = (project, onClose) => {
     // setTasks(updatedTasks);
   };
 
-  const handleUpdateProject = (newTitle, newUsers) => {
-    // Add the new task to the tasks array
-  };
-
   const tasksByStatus = tasks.reduce(
     (acc, task) => {
       acc[task.state].push(task);
@@ -69,6 +65,10 @@ const Project = (project, onClose) => {
     },
     [[], [], []]
   );
+
+  const handleUpdateProject = (newTitle, newUsers) => {
+    // Add the new task to the tasks array
+  };
 
   return (
     <div className="p-8">
