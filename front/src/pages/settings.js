@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { json } from "react-router-dom";
 
 const Settings = () => {
   const [notificationEnabled, setNotificationEnabled] = useState(false);
@@ -146,34 +145,6 @@ const Settings = () => {
           console.log(response);
         });
     });
-  };
-
-  const showNotification = (message) => {
-    // Check if the Notification API is supported
-    if ("Notification" in window) {
-      // Check if the user has granted permission
-      if (Notification.permission === "granted") {
-        // Display the notification
-        const options = {
-          body: message,
-        };
-
-        new Notification("OrganizeMe", options);
-      }
-    }
-  };
-
-  const handleButtonClick = () => {
-    // Check if push notifications are enabled
-    console.log("fb");
-    if (notificationEnabled) {
-      console.log("ok");
-      // Assuming some event triggers this, you can customize the message
-      showNotification("Button Clicked! You can customize this message.");
-    } else {
-      // Optionally, provide user feedback about disabled notifications
-      console.log("Notifications are not enabled");
-    }
   };
 
   return (
@@ -358,7 +329,6 @@ const Settings = () => {
           </form>
         </div>
       </div>
-      <button onClick={handleButtonClick}>Trigger Notification</button>
     </div>
   );
 };
