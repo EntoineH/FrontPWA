@@ -46,7 +46,6 @@ const UpdateTaskModal = ({
         users: selectedUsers,
         dueDate,
         state,
-        project: taskId,
       })
       .then((response) => {
         console.log(response);
@@ -59,6 +58,7 @@ const UpdateTaskModal = ({
               users: users.filter((user) => selectedUsers.includes(user._id)),
               dueDate,
               state,
+              _id: taskId
             },
           });
           onClose();

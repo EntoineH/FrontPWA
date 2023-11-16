@@ -53,7 +53,7 @@ const AddTaskModal = ({
             users: users.filter((user) => selectedUsers.includes(user._id)),
             dueDate,
             state,
-            _id: response.data.taskId, // Assuming the response contains the task ID
+            _id: response.data.task._id, // Assuming the response contains the task ID
           });
         }
       });
