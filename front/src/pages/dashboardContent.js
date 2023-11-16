@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 function DashboardContent({ navigateToProject }) {
   const id = localStorage.getItem("id");
   const [projects, setProjects] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState(null);
 
   useEffect(() => {
     axios
@@ -19,6 +23,23 @@ function DashboardContent({ navigateToProject }) {
     navigateToProject(project);
   };
 
+  const handleDeleteClick = (project) => {
+    setProjectToDelete(project);
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Add your delete logic here for the projectToDelete
+    // After deleting, close the modal and reset projectToDelete
+    setShowModal(false);
+    setProjectToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowModal(false);
+    setProjectToDelete(null);
+  };
+
   return (
     <div className="w-full">
       <div className="bg-indigo-500 rounded-xl shadow-md p-2 m-2">
@@ -26,6 +47,32 @@ function DashboardContent({ navigateToProject }) {
       </div>
 
       <div className="flex flex-wrap justify-center h-screen">
+        {showModal && projectToDelete && (
+          <div
+            className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
+            style={{ zIndex: 500 }}
+          >
+            <div className="bg-white p-6 rounded-xl shadow-md">
+              <h2 className="text-lg font-semibold mb-4">
+                Are you sure you want to delete {projectToDelete.title} ?
+              </h2>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleCancelDelete}
+                  className=" rounded-xl bg-white hover:bg-indigo-50 px-3 py-2 text-sm font-semibold leading-6 text-gray-900"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="ml-1 rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {projects.map((project) => (
           <div
             key={project._id}
@@ -35,6 +82,16 @@ function DashboardContent({ navigateToProject }) {
               onClick={() => redirectToProject(project)}
               className="bg-white hover:bg-indigo-50 border-2 border-indigo-500 h-full overflow-hidden shadow-2xl rounded-3xl shadow-slate-600 relative cursor-pointer"
             >
+              <div className="absolute top-3 right-3">
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  className="text-gray-500 hover:text-red-500 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteClick(project); // Open modal when delete icon is clicked
+                  }}
+                />
+              </div>
               <div className="p-4">
                 <h2 className="text-indigo-500 font-bold text-2xl">
                   {project.title}

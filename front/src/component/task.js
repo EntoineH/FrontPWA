@@ -10,13 +10,15 @@ const Task = ({
   taskId,
   usersInProject,
   state,
+  onDeleteTask,
+  onUpdateTask,
 }) => {
   const deleteTask = () => {
     axios
       .delete(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks/${taskId}`)
       .then((response) => {
         if (response.data.success === true) {
-          window.location.reload(false);
+          onDeleteTask(taskId);
         }
       });
   };
@@ -46,7 +48,7 @@ const Task = ({
             className="w-8 h-8 rounded-full bg-indigo-400 text-white flex justify-center items-center text-sm font-bold"
             title={collaborator.username}
           >
-            {collaborator.username.substring(0, 1).toUpperCase()}
+            {collaborator?.username?.substring(0, 1).toUpperCase()}
           </div>
         ))}
       </div>
@@ -82,6 +84,7 @@ const Task = ({
           taskTitle={title}
           taskDate={date}
           taskState={state}
+          onUpdateTask={onUpdateTask}
         />
       )}
     </div>

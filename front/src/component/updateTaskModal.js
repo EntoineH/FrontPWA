@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import axios from 'axios'
+import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const UpdateTaskModal = ({ isOpen, onClose, usersInProject, taskId, usersInTask, taskTitle, taskDate, taskState }) => {
-
+const UpdateTaskModal = ({
+  isOpen,
+  onClose,
+  usersInProject,
+  taskId,
+  usersInTask,
+  taskTitle,
+  taskDate,
+  taskState,
+  onUpdateTask,
+}) => {
   const [title, setTitle] = useState(taskTitle);
   const [state, setState] = useState(taskState);
   const [dueDate, setDueDate] = useState(new Date(taskDate));
@@ -22,7 +31,7 @@ const UpdateTaskModal = ({ isOpen, onClose, usersInProject, taskId, usersInTask,
         return [...prevUsers, userId];
       }
     });
-    console.log(selectedUsers)
+    console.log(selectedUsers);
   };
 
   const handleSubmit = (event) => {
@@ -31,19 +40,30 @@ const UpdateTaskModal = ({ isOpen, onClose, usersInProject, taskId, usersInTask,
       setErrorMessage("Please select at least one collaborator.");
       return;
     }
-    axios.put(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks/${taskId}`, {
-      title,
-      "users": selectedUsers,
-      dueDate,
-      state,
-      "project": taskId
-    })
-      .then((response) => {
-        if (response.data.success === true) {
-          onClose();
-          window.location.reload(false)
-        }
+    axios
+      .put(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks/${taskId}`, {
+        title,
+        users: selectedUsers,
+        dueDate,
+        state,
+        project: taskId,
       })
+      .then((response) => {
+        console.log(response);
+        if (response.data.success === true) {
+          // Update task in the list without reloading the page
+          onUpdateTask({
+            id: taskId,
+            updatedTask: {
+              title,
+              users: users.filter((user) => selectedUsers.includes(user._id)),
+              dueDate,
+              state,
+            },
+          });
+          onClose();
+        }
+      });
   };
 
   return (
@@ -59,7 +79,7 @@ const UpdateTaskModal = ({ isOpen, onClose, usersInProject, taskId, usersInTask,
     >
       <div className="md:w-2/5 bg-white p-4 rounded-xl border border-gray-300">
         <div className="bg-indigo-500 rounded-xl shadow-md p-2">
-          <h1 className="text-white text-2xl font-bold">Create new project</h1>
+          <h1 className="text-white text-2xl font-bold">Update task</h1>
         </div>
         <form onSubmit={handleSubmit}>
           <label className="border-t my-3 border-gray-900/10 mb-2 block font-semibold">
@@ -97,7 +117,7 @@ const UpdateTaskModal = ({ isOpen, onClose, usersInProject, taskId, usersInTask,
           </label>
 
           <label className="block mb-2 font-semibold">
-            Select collaborators:
+            Assigned to:
             <div className="border bg-gray-50 border-gray-300 rounded  max-h-40 overflow-y-auto">
               {users.map((user) => (
                 <div
@@ -135,7 +155,7 @@ const UpdateTaskModal = ({ isOpen, onClose, usersInProject, taskId, usersInTask,
               type="submit"
               className="rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Update Task
+              Confirm
             </button>
           </div>
         </form>

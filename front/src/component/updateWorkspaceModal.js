@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import axios from 'axios'
+import axios from "axios";
 
-const UpdateWorkspaceModal = ({ isOpen, onClose, usersInProject, projectTitle, projectId }) => {
-  const id = localStorage.getItem("id")
+const UpdateWorkspaceModal = ({
+  isOpen,
+  onClose,
+  usersInProject,
+  projectTitle,
+  projectId,
+  updateProject,
+}) => {
+  const id = localStorage.getItem("id");
   const [title, setTitle] = useState(projectTitle);
   const [selectedUsers, setSelectedUsers] = useState(usersInProject);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/except/${id}`)
+    axios
+      .get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/except/${id}`)
       .then((response) => {
         if (response.data.success === true) {
-          setUsers(response.data.message)
+          setUsers(response.data.message);
         }
-      })
+      });
   }, []);
 
   const handleUserSelect = (userId) => {
@@ -26,21 +34,28 @@ const UpdateWorkspaceModal = ({ isOpen, onClose, usersInProject, projectTitle, p
         return [...prevUsers, userId];
       }
     });
-    console.log(selectedUsers)
+    console.log(selectedUsers);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.put(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/${projectId}`, {
-      title,
-      "users": selectedUsers
-    })
+    axios
+      .put(
+        `https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/${projectId}`,
+        {
+          title,
+          users: selectedUsers,
+        }
+      )
       .then((response) => {
         if (response.data.success === true) {
           onClose();
-          window.location.reload(false)
+          updateProject({
+            title,
+            users: selectedUsers,
+          });
         }
-      })
+      });
   };
 
   return (
@@ -105,7 +120,7 @@ const UpdateWorkspaceModal = ({ isOpen, onClose, usersInProject, projectTitle, p
               type="submit"
               className="rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Update Project
+              Confirm
             </button>
           </div>
         </form>

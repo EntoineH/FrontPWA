@@ -15,7 +15,7 @@ const Project = (project, onClose) => {
   const [showUpdateWorkspaceModal, setShowUpdateWorkspaceModal] =
     useState(false);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-  const tasks = project.project.tasks;
+  const [tasks, setTasks] = useState(project.project.tasks);
 
   const openUpdateWorkspaceModal = () => {
     setShowUpdateWorkspaceModal(true);
@@ -31,6 +31,29 @@ const Project = (project, onClose) => {
 
   const closeAddTaskModal = () => {
     setShowAddTaskModal(false);
+  };
+
+  const handleDeleteTask = (taskId) => {
+    // Logic to delete the task from tasks array in state
+    const updatedTasks = tasks.filter((task) => task._id !== taskId);
+    setTasks(updatedTasks);
+  };
+  const handleUpdateTask = ({ id, updatedTask }) => {
+    // Update the task in tasks array based on the id
+    const updatedTasks = tasks.map((task) =>
+      task._id === id ? updatedTask : task
+    );
+    setTasks(updatedTasks);
+  };
+
+  const handleUpdateTaskList = (newTask) => {
+    // Add the new task to the tasks array
+    const updatedTasks = [...tasks, newTask];
+    setTasks(updatedTasks);
+  };
+
+  const handleUpdateProject = (newTitle, newUsers) => {
+    // Add the new task to the tasks array
   };
 
   const tasksByStatus = tasks.reduce(
@@ -88,6 +111,8 @@ const Project = (project, onClose) => {
                 taskId={task._id}
                 usersInProject={project.project.users}
                 state={task.state}
+                onDeleteTask={handleDeleteTask}
+                onUpdateTask={handleUpdateTask}
               />
             ))}
           </Column>
@@ -110,6 +135,7 @@ const Project = (project, onClose) => {
           usersInProject={project.project.users.map((user) => user._id)}
           projectTitle={project.project.title}
           projectId={project.project._id}
+          updateProject={handleUpdateProject}
         />
       )}
       {showAddTaskModal && (
@@ -118,6 +144,7 @@ const Project = (project, onClose) => {
           onClose={closeAddTaskModal}
           usersInProject={project.project.users}
           projectId={project.project._id}
+          updateTaskList={handleUpdateTaskList}
         />
       )}
     </div>

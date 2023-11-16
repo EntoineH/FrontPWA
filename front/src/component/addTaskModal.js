@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import axios from 'axios'
+import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
-
+const AddTaskModal = ({
+  isOpen,
+  onClose,
+  usersInProject,
+  projectId,
+  updateTaskList,
+}) => {
   const [title, setTitle] = useState("");
   const [state, setState] = useState(0);
   const [dueDate, setDueDate] = useState(new Date());
@@ -22,7 +27,7 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
         return [...prevUsers, userId];
       }
     });
-    console.log(selectedUsers)
+    console.log(selectedUsers);
   };
 
   const handleSubmit = (event) => {
@@ -31,19 +36,27 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
       setErrorMessage("Please select at least one collaborator.");
       return;
     }
-    axios.post('https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks', {
-      title,
-      "users": selectedUsers,
-      dueDate,
-      state,
-      "project": projectId
-    })
+    axios
+      .post("https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks", {
+        title,
+        users: selectedUsers,
+        dueDate,
+        state,
+        project: projectId,
+      })
       .then((response) => {
         if (response.data.success === true) {
+          // Call a callback function to update the task list in the parent component
           onClose();
-          window.location.reload(false)
+          updateTaskList({
+            title,
+            users: users.filter((user) => selectedUsers.includes(user._id)),
+            dueDate,
+            state,
+            _id: response.data.taskId, // Assuming the response contains the task ID
+          });
         }
-      })
+      });
   };
 
   return (
@@ -59,7 +72,7 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
     >
       <div className="md:w-2/5 bg-white p-4 rounded-xl border border-gray-300">
         <div className="bg-indigo-500 rounded-xl shadow-md p-2">
-          <h1 className="text-white text-2xl font-bold">Create new project</h1>
+          <h1 className="text-white text-2xl font-bold">Create new task</h1>
         </div>
         <form onSubmit={handleSubmit}>
           <label className="border-t my-3 border-gray-900/10 mb-2 block font-semibold">
@@ -97,7 +110,7 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
           </label>
 
           <label className="block mb-2 font-semibold">
-            Select collaborators:
+            Assigned to:
             <div className="border bg-gray-50 border-gray-300 rounded  max-h-40 overflow-y-auto">
               {users.map((user) => (
                 <div
@@ -135,7 +148,7 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
               type="submit"
               className="rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Add Task
+              Confirm
             </button>
           </div>
         </form>

@@ -1,7 +1,12 @@
 import React from "react";
 import "./App.css";
 import LoginPage from "./pages/login";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import RegisterPage from "./pages/register";
 import ResetPasswordPage from "./pages/resetPassword";
 import ConfirmResetPasswordPage from "./pages/confirmResetPassword";
@@ -11,7 +16,7 @@ import Dashboard from "./pages/dashboard";
 import ProtectedRoute from "./component/ProtectedRoute";
 
 function App() {
-  const isAuthenticated = localStorage.getItem('token');
+  const isAuthenticated = localStorage.getItem("token");
 
   return (
     <div>
@@ -35,4 +40,4 @@ function App() {
   );
 }
 
-export default withSplashScreen(App);
+export default App;
