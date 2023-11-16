@@ -107,10 +107,23 @@ self.addEventListener("fetch", (event) => {
 
 // Any other custom service worker logic can go here.
 // Add push notification handling
-self.addEventListener("push", (event) => {
+self.addEventListener('push', (event) => {
   const options = event.data.json().notification;
 
-  event.waitUntil(self.registration.showNotification("OrganizeMe", options));
+  event.waitUntil(self.registration.showNotification('OrganizeMe', options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  const notification = event.notification;
+  const data = notification.data;
+
+  // Close the notification
+  notification.close();
+
+  // Open the specified URL in a new tab or window
+  if (data && data.redirectUrl) {
+    self.clients.openWindow(data.redirectUrl);
+  }
 });
 
 self.addEventListener("notificationclick", (event) => {
