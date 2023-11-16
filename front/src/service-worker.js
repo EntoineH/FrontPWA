@@ -7,11 +7,11 @@
 // You can also remove this file if you'd prefer not to use a
 // service worker, and the Workbox build step will be skipped.
 
-import { clientsClaim } from 'workbox-core';
-import { ExpirationPlugin } from 'workbox-expiration';
-import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
-import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { clientsClaim } from "workbox-core";
+import { ExpirationPlugin } from "workbox-expiration";
+import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
+import { registerRoute } from "workbox-routing";
+import { StaleWhileRevalidate } from "workbox-strategies";
 
 clientsClaim();
 
@@ -24,16 +24,16 @@ precacheAndRoute(self.__WB_MANIFEST);
 // Set up App Shell-style routing, so that all navigation requests
 // are fulfilled with your index.html shell. Learn more at
 // https://developers.google.com/web/fundamentals/architecture/app-shell
-const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
+const fileExtensionRegexp = new RegExp("/[^/?]+\\.[^/]+$");
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({ request, url }) => {
     // If this isn't a navigation, skip.
-    if (request.mode !== 'navigate') {
+    if (request.mode !== "navigate") {
       return false;
     } // If this is a URL that starts with /_, skip.
 
-    if (url.pathname.startsWith('/_')) {
+    if (url.pathname.startsWith("/_")) {
       return false;
     } // If this looks like a URL for a resource, because it contains // a file extension, skip.
 
@@ -43,16 +43,18 @@ registerRoute(
 
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
+  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html")
 );
 
 // An example runtime caching route for requests that aren't handled by the
 // precache, in this case same-origin .png requests like those from in public/
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && (url.pathname.endsWith('.png') || url.pathname.endsWith('.ico')),
+  ({ url }) =>
+    url.origin === self.location.origin &&
+    (url.pathname.endsWith(".png") || url.pathname.endsWith(".ico")),
   new StaleWhileRevalidate({
-    cacheName: 'images',
+    cacheName: "images",
     plugins: [
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.
@@ -63,10 +65,66 @@ registerRoute(
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
 
+// service-worker.js
+
+const cacheName = "my-cache-v1";
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(cacheName).then((cache) => {
+      return cache.addAll([
+        // Add other files to cache if needed
+      ]);
+    })
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      return (
+        cachedResponse ||
+        fetch(event.request).then((response) => {
+          if (event.request.method === "GET") {
+            // Cache the GET request response
+            const clone = response.clone();
+            caches.open(cacheName).then((cache) => {
+              cache.put(event.request, clone);
+            });
+          }
+          return response;
+        })
+      );
+    })
+  );
+});
+
 // Any other custom service worker logic can go here.
+// Add push notification handling
+self.addEventListener("push", (event) => {
+  const options = event.data.json().notification;
+
+  event.waitUntil(self.registration.showNotification("OrganizeMe", options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  // Add your custom handling logic here, e.g., open a specific URL
+});
+
+// Add push subscription handling
+self.addEventListener("pushsubscriptionchange", (event) => {
+  // Perform actions when the push subscription changes
+  console.log("Push subscription changed:", event);
+
+  // You may want to send the new subscription to the server for updating
+  // axios.post('https://your-server-endpoint.com/update-subscription', {
+  //   newSubscription: event.newSubscription.toJSON(),
+  // });
+});

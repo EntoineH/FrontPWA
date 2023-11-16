@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import axios from 'axios'
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
-const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
+const UpdateWorkspaceModal = ({ isOpen, onClose, usersInProject, projectTitle, projectId }) => {
+  const id = localStorage.getItem("id")
+  const [title, setTitle] = useState(projectTitle);
+  const [selectedUsers, setSelectedUsers] = useState(usersInProject);
+  const [users, setUsers] = useState([]);
 
-  const [title, setTitle] = useState("");
-  const [state, setState] = useState(0);
-  const [dueDate, setDueDate] = useState(new Date());
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [users, setUsers] = useState(usersInProject);
-  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    axios.get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/except/${id}`)
+      .then((response) => {
+        if (response.data.success === true) {
+          setUsers(response.data.message)
+        }
+      })
+  }, []);
 
   const handleUserSelect = (userId) => {
     // Toggle user selection
@@ -27,16 +31,9 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (selectedUsers.length === 0) {
-      setErrorMessage("Please select at least one collaborator.");
-      return;
-    }
-    axios.post('https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks', {
+    axios.put(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/${projectId}`, {
       title,
-      "users": selectedUsers,
-      dueDate,
-      state,
-      "project": projectId
+      "users": selectedUsers
     })
       .then((response) => {
         if (response.data.success === true) {
@@ -59,39 +56,15 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
     >
       <div className="md:w-2/5 bg-white p-4 rounded-xl border border-gray-300">
         <div className="bg-indigo-500 rounded-xl shadow-md p-2">
-          <h1 className="text-white text-2xl font-bold">Create new project</h1>
+          <h1 className="text-white text-2xl font-bold">Update project</h1>
         </div>
         <form onSubmit={handleSubmit}>
           <label className="border-t my-3 border-gray-900/10 mb-2 block font-semibold">
-            Task Name:
+            Project Name:
             <input
               type="text"
               value={title}
-              required
               onChange={(event) => setTitle(event.target.value)}
-              className="border border-gray-300 font-normal rounded w-full p-2"
-            />
-          </label>
-
-          <label className="border-t my-3 border-gray-900/10 mb-2 block font-semibold">
-            Task Status:
-            <select
-              value={state}
-              onChange={(event) => setState(Number(event.target.value))}
-              className="border border-gray-300 font-normal rounded w-full p-2"
-            >
-              <option value={0}>To Do</option>
-              <option value={1}>In Progress</option>
-              <option value={2}>Finished</option>
-            </select>
-          </label>
-
-          <label className="border-t my-3 border-gray-900/10 mb-2 block font-semibold">
-            Task Due Date:
-            <DatePicker
-              selected={dueDate}
-              onChange={(date) => setDueDate(date)}
-              dateFormat="yyyy-MM-dd"
               className="border border-gray-300 font-normal rounded w-full p-2"
             />
           </label>
@@ -116,9 +89,6 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
                       className="form-checkbox accent-indigo-500"
                     />
                   </label>
-                  {errorMessage && (
-                    <div className="text-red-500 mb-2">{errorMessage}</div>
-                  )}
                 </div>
               ))}
             </div>
@@ -135,7 +105,7 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
               type="submit"
               className="rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Add Task
+              Update Project
             </button>
           </div>
         </form>
@@ -144,4 +114,4 @@ const AddTaskModal = ({ isOpen, onClose, usersInProject, projectId }) => {
   );
 };
 
-export default AddTaskModal;
+export default UpdateWorkspaceModal;

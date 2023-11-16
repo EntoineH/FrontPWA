@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   Typography,
@@ -18,18 +18,31 @@ import {
 } from "@heroicons/react/24/solid";
 import * as cgIcon from "react-icons/cg";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import axios from 'axios'
 
 function SideBar({
   activeTab,
   onTabChange,
   toggleSidebar,
   openAddWorkspaceModal,
+  navigateToProject
 }) {
+  const id = localStorage.getItem("id")
   const [open, setOpen] = useState(0);
+  const [projects, setProjects] = useState([]);
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
+
+  useEffect(() => {
+    axios.get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/user/${id}`)
+      .then((response) => {
+        if (response.data.success === true) {
+          setProjects(response.data.projects)
+        }
+      })
+  }, []);
 
   return (
     <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
@@ -75,9 +88,8 @@ function SideBar({
           icon={
             <ChevronDownIcon
               strokeWidth={2.5}
-              className={`mx-auto h-4 w-4 transition-transform ${
-                open === 1 ? "rotate-180" : ""
-              }`}
+              className={`mx-auto h-4 w-4 transition-transform ${open === 1 ? "rotate-180" : ""
+                }`}
             />
           }
         >
@@ -96,7 +108,11 @@ function SideBar({
           </ListItem>
           <AccordionBody className="py-1">
             <List className="p-0">
-              <ListItem>Analytics</ListItem>
+              {projects.map((project) => (
+                <ListItem key={project._id} onClick={() => navigateToProject(project)}>
+                  {project.title}
+                </ListItem>
+              ))}
             </List>
           </AccordionBody>
         </Accordion>
