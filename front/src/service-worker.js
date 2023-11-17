@@ -109,7 +109,7 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener('push', (event) => {
   const options = event.data.json().notification;
 
-  event.waitUntil(self.registration.showNotification('OrganizeMe', options));
+  event.waitUntil(self.registration.showNotification(options.title, options));
 });
 
 self.addEventListener('notificationclick', (event) => {

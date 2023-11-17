@@ -41,7 +41,7 @@ function DashboardContent({ navigateToProject }) {
             .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`, {
               users: projectToDelete.users.map((user) => user._id).filter((id) => id !== myId),
               title: "Project deleted",
-              body: `${username} add you to ${projectToDelete.title}`,
+              body: `${username} delete the project ${projectToDelete.title}`,
               redirectUrl: "https://front-pwa-eight.vercel.app/dashboard"
             })
             .then((response) => {

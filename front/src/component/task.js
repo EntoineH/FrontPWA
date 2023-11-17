@@ -13,12 +13,24 @@ const Task = ({
   onDeleteTask,
   onUpdateTask,
 }) => {
+  const myId = localStorage.getItem("id");
+  const username = localStorage.getItem("username");
   const deleteTask = () => {
     axios
       .delete(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/tasks/${taskId}`)
       .then((response) => {
         if (response.data.success === true) {
           onDeleteTask(taskId);
+          axios
+            .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`, {
+              users: collaborators.map((collaborator) => collaborator._id).filter((id) => id !== myId),
+              title: "Task deleted",
+              body: `${username} delete the task ${title}`,
+              redirectUrl: "https://front-pwa-eight.vercel.app/dashboard"
+            })
+            .then((response) => {
+              console.log(response)
+            });
         }
       });
   };
