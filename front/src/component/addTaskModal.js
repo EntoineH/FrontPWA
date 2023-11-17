@@ -17,6 +17,8 @@ const AddTaskModal = ({
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState(usersInProject);
   const [errorMessage, setErrorMessage] = useState("");
+  const username = localStorage.getItem("username");
+  const userId = localStorage.getItem("id");
 
   const handleUserSelect = (userId) => {
     // Toggle user selection
@@ -55,6 +57,16 @@ const AddTaskModal = ({
             state,
             _id: response.data.task._id, // Assuming the response contains the task ID
           });
+          axios
+            .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`, {
+              users: selectedUsers.filter((id) => id !== userId),
+              title: "New task",
+              body: `${username} assign you to a new task`,
+              redirectUrl: "https://front-pwa-eight.vercel.app/dashboard"
+            })
+            .then((response) => {
+              console.log(response)
+            });
         }
       });
   };
