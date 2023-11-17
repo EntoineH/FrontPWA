@@ -138,11 +138,13 @@ const Settings = () => {
       });
 
       axios
-        .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/subscribe/${id}`, {
-          subscription: subscription,
-        })
-        .then((response) => {
-        });
+        .post(
+          `https://pwa-backend-2c14dae9b4e4.herokuapp.com/subscribe/${id}`,
+          {
+            subscription: subscription,
+          }
+        )
+        .then((response) => {});
     });
   };
 
@@ -187,7 +189,7 @@ const Settings = () => {
 
                   <div class="sm:col-span-3">
                     <label
-                      for="email-address"
+                      for="email"
                       class="block text-sm font-medium leading-6 text-gray-900"
                     >
                       Email address
@@ -208,7 +210,7 @@ const Settings = () => {
 
                   <div class="sm:col-span-3">
                     <label
-                      for="new-password"
+                      for="n-password"
                       class="block text-sm font-medium leading-6 text-gray-900"
                     >
                       New password
@@ -219,10 +221,11 @@ const Settings = () => {
                         value={password}
                         type="password"
                         name="fir"
-                        id="fir"
+                        id="n-password"
                         autocomplete="given-name"
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${errors.password ? "border-red-500" : ""
-                          }`}
+                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                          errors.password ? "border-red-500" : ""
+                        }`}
                       />
                       {errors.password && (
                         <p className="text-red-600">{errors.password}</p>
@@ -232,7 +235,7 @@ const Settings = () => {
 
                   <div class="sm:col-span-3">
                     <label
-                      for="confirm-password"
+                      for="c-password"
                       class="block text-sm font-medium leading-6 text-gray-900"
                     >
                       Confirm new password
@@ -243,7 +246,7 @@ const Settings = () => {
                         value={confirmPassword}
                         type="password"
                         name="last-"
-                        id="last-"
+                        id="c-password"
                         autocomplete="family-name"
                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
