@@ -36,23 +36,6 @@ const Dashboard = () => {
     }
   }, [activeTab]);
 
-// Detect visibility changes in the page
-document.addEventListener('visibilitychange', () => {
-  const isVisible = document.visibilityState === 'visible';
-  navigator.serviceWorker.controller.postMessage({ type: 'visibilityChange', isVisible });
-});
-
-// Detect focus changes in the page
-window.addEventListener('focus', () => {
-  navigator.serviceWorker.controller.postMessage({ type: 'visibilityChange', isVisible: true });
-});
-
-// Detect blur changes in the page
-window.addEventListener('blur', () => {
-  navigator.serviceWorker.controller.postMessage({ type: 'visibilityChange', isVisible: false });
-});
-
-
   return (
     <div className="flex h-screen w-full">
       {!sidebarOpen && (
