@@ -50,10 +50,7 @@ const UpdateWorkspaceModal = ({
       .then((response) => {
         if (response.data.success === true) {
           onClose();
-          updateProject({
-            title,
-            users: selectedUsers,
-          });
+          window.location.reload(false);
         }
       });
   };

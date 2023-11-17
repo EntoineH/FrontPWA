@@ -121,6 +121,7 @@ function DashboardContent({ navigateToProject }) {
 
               <div className="absolute bottom-2 right-2 flex flex-row">
                 {project.users.map((user, index) => (
+                  index < 3 && (
                   <div
                     key={index}
                     className="w-8 h-8 rounded-full bg-indigo-400 text-white flex justify-center items-center text-sm font-bold"
@@ -129,6 +130,7 @@ function DashboardContent({ navigateToProject }) {
                   >
                     {user.username.substring(0, 1).toUpperCase()}
                   </div>
+                  )
                 ))}
                 {project.users.length > 3 && (
                   <div
