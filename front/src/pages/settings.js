@@ -80,15 +80,12 @@ const Settings = () => {
     if ("Notification" in window) {
       if (Notification.permission === "granted") {
         // Notifications are allowed
-        console.log("Notifications are allowed");
         setNotificationEnabled(true);
         subscribeUserToPush()
       } else if (Notification.permission === "denied") {
         // Notifications are blocked
-        console.log("Notifications are blocked");
       } else {
         // Notifications are not denied or granted yet, can prompt the user
-        console.log("Notifications are not denied or granted yet");
       }
     }
   }, []);
