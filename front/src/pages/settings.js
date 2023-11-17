@@ -81,7 +81,6 @@ const Settings = () => {
       if (Notification.permission === "granted") {
         // Notifications are allowed
         setNotificationEnabled(true);
-        subscribeUserToPush()
       } else if (Notification.permission === "denied") {
         // Notifications are blocked
       } else {
