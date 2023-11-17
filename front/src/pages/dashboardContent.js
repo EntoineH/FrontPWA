@@ -32,6 +32,13 @@ function DashboardContent({ navigateToProject }) {
     // Add your delete logic here for the projectToDelete
     // After deleting, close the modal and reset projectToDelete
     setShowModal(false);
+    axios
+    .delete(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/${projectToDelete._id}`)
+    .then((response) => {
+      if (response.data.success === true) {
+        window.location.reload(false);
+      }
+    });
     setProjectToDelete(null);
   };
 
