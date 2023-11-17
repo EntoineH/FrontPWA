@@ -3,15 +3,15 @@ import Modal from "react-modal";
 import axios from "axios";
 
 const AddWorkspaceModal = ({ isOpen, onClose }) => {
-  const id = localStorage.getItem("id");
+  const myId = localStorage.getItem("id");
   const [title, setTitle] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState([id]);
+  const [selectedUsers, setSelectedUsers] = useState([myId]);
   const [users, setUsers] = useState([]);
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
-    console.log("id === ", id);
     axios
-      .get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/except/${id}`)
+      .get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/except/${myId}`)
       .then((response) => {
         if (response.data.success === true) {
           setUsers(response.data.message);
@@ -41,6 +41,16 @@ const AddWorkspaceModal = ({ isOpen, onClose }) => {
       .then((response) => {
         if (response.data.success === true) {
           onClose();
+          axios
+            .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`, {
+              users: selectedUsers.filter((id) => id !== myId),
+              title: "New Project",
+              body: `${username} add you to ${title}`,
+              redirectUrl: "https://front-pwa-eight.vercel.app/dashboard"
+            })
+            .then((response) => {
+              console.log(response)
+            });
           window.location.reload(false);
         }
       });
