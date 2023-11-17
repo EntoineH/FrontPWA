@@ -57,10 +57,15 @@ const Dashboard = () => {
         />
       )}
       <div className="w-4/5">
-        {activeTab === "dashboard" && <DashboardContent navigateToProject={navigateToProject}/>}
+        {activeTab === "dashboard" && (
+          <DashboardContent navigateToProject={navigateToProject} />
+        )}
         {activeTab === "settings" && <Settings />}
         {activeTab === "project" && (
-          <Project project={selectedProject} onClose={() => setActiveTab("dashboard")} />
+          <Project
+            project={selectedProject}
+            onClose={() => setActiveTab("dashboard")}
+          />
         )}
       </div>
       {showAddWorkspaceModal && (

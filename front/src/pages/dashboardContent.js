@@ -17,7 +17,7 @@ function DashboardContent({ navigateToProject }) {
           setProjects(response.data.projects);
         }
       });
-  }, []);
+  }, [id]);
 
   const redirectToProject = (project) => {
     navigateToProject(project);
