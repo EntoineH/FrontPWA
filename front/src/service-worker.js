@@ -62,12 +62,15 @@ registerRoute(
     ],
   })
 );
-
+let isPageVisible = true;
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
+  }
+  if (event.data && event.data.type === 'visibilityChange') {
+    isPageVisible = event.data.isVisible;
   }
 });
 
@@ -121,15 +124,32 @@ const isAnyPageVisible = async () => {
 self.addEventListener('push', async (event) => {
   const options = event.data.json().notification;
 
-  const pageVisible = await isAnyPageVisible();
-
-  if (pageVisible) {
+  if (isPageVisible) {
     // Page is visible, show an alert with notification info
     alert(`New Notification:\nTitle: ${options.title}\nBody: ${options.body}`);
   } else {
     // Page is not visible, proceed to show the notification
     event.waitUntil(self.registration.showNotification('OrganizeMe', options));
   }
+});
+
+
+self.addEventListener('focus', () => {
+  // Page gains focus, inform the service worker
+  self.clients.matchAll({ includeUncontrolled: true }).then(clients => {
+    clients.forEach(client => {
+      client.postMessage({ type: 'visibilityChange', isVisible: true });
+    });
+  });
+});
+
+self.addEventListener('blur', () => {
+  // Page loses focus, inform the service worker
+  self.clients.matchAll({ includeUncontrolled: true }).then(clients => {
+    clients.forEach(client => {
+      client.postMessage({ type: 'visibilityChange', isVisible: false });
+    });
+  });
 });
 
 self.addEventListener('notificationclick', (event) => {
