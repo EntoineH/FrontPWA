@@ -4,20 +4,21 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 function DashboardContent({ navigateToProject }) {
-  const id = localStorage.getItem("id");
+  const myId = localStorage.getItem("id");
   const [projects, setProjects] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState(null);
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
     axios
-      .get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/user/${id}`)
+      .get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/user/${myId}`)
       .then((response) => {
         if (response.data.success === true) {
           setProjects(response.data.projects);
         }
       });
-  }, [id]);
+  }, [myId]);
 
   const redirectToProject = (project) => {
     navigateToProject(project);
@@ -36,6 +37,16 @@ function DashboardContent({ navigateToProject }) {
     .delete(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/${projectToDelete._id}`)
     .then((response) => {
       if (response.data.success === true) {
+        axios
+            .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`, {
+              users: projectToDelete.users.map((user) => user._id).filter((id) => id !== myId),
+              title: "Project deleted",
+              body: `${username} add you to ${title}`,
+              redirectUrl: "https://front-pwa-eight.vercel.app/dashboard"
+            })
+            .then((response) => {
+              console.log(response)
+            });
         window.location.reload(false);
       }
     });

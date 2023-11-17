@@ -93,7 +93,9 @@ self.addEventListener("fetch", (event) => {
 
       // Open the cache and add the response
       caches.open(cacheName).then((cache) => {
-        cache.put(event.request, responseToCache);
+        if (event.request.method === 'GET' && response.status === 200) {
+          cache.put(event.request, responseToCache);
+        }
       });
 
       return response;
@@ -158,3 +160,6 @@ self.addEventListener("pushsubscriptionchange", (event) => {
   //   newSubscription: event.newSubscription.toJSON(),
   // });
 });
+
+
+
