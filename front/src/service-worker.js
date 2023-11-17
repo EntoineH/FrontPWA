@@ -105,20 +105,22 @@ self.addEventListener("fetch", (event) => {
 
 // Any other custom service worker logic can go here.
 // Add push notification handling
-self.addEventListener('push', (event) => {
+const isAnyPageVisible = async () => {
+  const clients = await self.clients.matchAll();
+  return clients.some(client => client.visibilityState === 'visible');
+};
+
+self.addEventListener('push', async (event) => {
   const options = event.data.json().notification;
 
-  self.clients.matchAll().then(clients => {
-    const isPageVisible = clients.some(client => client.visibilityState === 'visible');
-    
-    if (isPageVisible) {
-      // Page is visible, show an alert with notification info
-      alert(`New Notification:\nTitle: ${options.title}\nBody: ${options.body}`);
-    } else {
-      // Page is not visible, proceed to show the notification
-      event.waitUntil(self.registration.showNotification('OrganizeMe', options));
-    }
-  });
+  const pageVisible = await isAnyPageVisible();
+  if (pageVisible) {
+    // Page is visible, show an alert with notification info
+    alert(`New Notification:\nTitle: ${options.title}\nBody: ${options.body}`);
+  } else {
+    // Page is not visible, proceed to show the notification
+    event.waitUntil(self.registration.showNotification('OrganizeMe', options));
+  }
 });
 
 self.addEventListener('notificationclick', (event) => {
