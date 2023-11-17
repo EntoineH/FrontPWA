@@ -40,9 +40,25 @@ const Settings = () => {
           }
         ).then((response) => {
           if (response.data.success === true) {
+            setErrors({});
             localStorage.setItem("email", email);
             localStorage.setItem("username", username);
             toast("Settings changed");
+          } else {
+            const { message } = response.data;
+            setErrors({});
+            if (message === "Username already in use") {
+              setErrors((prevErrors) => ({
+                ...prevErrors,
+                username: "Username already in use",
+              }));
+            }
+            if (message === "Email already in use") {
+              setErrors((prevErrors) => ({
+                ...prevErrors,
+                email: "Email already in use",
+              }));
+            }
           }
         })
   }
@@ -150,8 +166,12 @@ const Settings = () => {
                         id="username"
                         required
                         autocomplete="given-name"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
+                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                          errors.username ? "border-red-500" : ""
+                        }`}                      />
+                      {errors.username && (
+                        <p className="text-red-600">{errors.username}</p>
+                      )}
                     </div>
                   </div>
 
@@ -171,8 +191,13 @@ const Settings = () => {
                         id="email"
                         autocomplete="family-name"
                         required
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                          errors.email ? "border-red-500" : ""
+                        }`}
                       />
+                      {errors.email && (
+                        <p className="text-red-600">{errors.email}</p>
+                      )}
                     </div>
                   </div>
                 </div>

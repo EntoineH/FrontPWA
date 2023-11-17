@@ -21,23 +21,26 @@ function LoginForm() {
 
     if (token) {
       // Verify the token on the server
-      axios
-        .post("https://pwa-backend-2c14dae9b4e4.herokuapp.com/validate-token", {
-          token,
-        })
-        .then((response) => {
-          if (response.data.success) {
+      const verifyToken = async () => {
+        try {
+          const response = await axios.post(
+            "https://pwa-backend-2c14dae9b4e4.herokuapp.com/validate-token",
+            { token }
+          );
+          if (response.data.success === true) {
             // If the token is valid, navigate to the dashboard
             navigate("/dashboard");
           } else {
             // If the token is invalid or expired, clear it from local storage
             localStorage.removeItem("token");
           }
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error("Error verifying token:", error);
           // Handle error as needed
-        });
+        }
+      };
+
+      verifyToken();
     }
   }, []);
 
