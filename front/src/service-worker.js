@@ -95,11 +95,11 @@ self.addEventListener("fetch", (event) => {
       const responseToCache = response.clone();
 
       // Open the cache and add the response
-      caches.open(cacheName).then((cache) => {
-        if (event.request.method === 'GET' && response.status === 200) {
+      if (event.request.method === 'GET' && response.status === 200) {
+        caches.open(cacheName).then((cache) => {
           cache.put(event.request, responseToCache);
-        }
-      });
+        });
+      }
 
       return response;
     }).catch(() => {
