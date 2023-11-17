@@ -81,7 +81,7 @@ const Project = (project, onClose) => {
         </button>
       </div>
 
-      <div className="flex flex-row ">
+      <div className="flex flex-row">
         {project.project.users.map((user, index) => (
           <div
             key={index}
@@ -93,12 +93,19 @@ const Project = (project, onClose) => {
         ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         {[0, 1, 2].map((state) => (
           <Column
             key={state}
             title={
               state === 0 ? "To do" : state === 1 ? "In progress" : "Finished"
+            }
+            className={
+              state === 0
+                ? "bg-green-200"
+                : state === 1
+                ? "bg-orange-200"
+                : "bg-blue-200"
             }
           >
             {tasksByStatus[state].map((task) => (
