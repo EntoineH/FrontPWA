@@ -89,15 +89,18 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen w-full">
-      {!sidebarOpen && (
-        <IconButton
-          variant="text"
-          onClick={toggleSidebar}
-          className="lg:hidden m-5"
-        >
-          <cgIcon.CgList size={30} />
-        </IconButton>
-      )}
+      <div>
+        {!sidebarOpen && (
+          <IconButton
+            variant="text"
+            onClick={toggleSidebar}
+            className="lg:hidden"
+          >
+            <cgIcon.CgList size={30} />
+          </IconButton>
+        )}
+      </div>
+
       {sidebarOpen && (
         <SideBar
           activeTab={activeTab}
@@ -107,7 +110,7 @@ const Dashboard = () => {
           navigateToProject={navigateToProject}
         />
       )}
-      <div className="w-4/5">
+      <div className={`w-4/5 ${sidebarOpen ? "ml-[20rem] z-10" : ""}`}>
         {activeTab === "dashboard" && (
           <DashboardContent navigateToProject={navigateToProject} />
         )}

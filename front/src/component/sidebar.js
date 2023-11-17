@@ -18,16 +18,17 @@ import {
 } from "@heroicons/react/24/solid";
 import * as cgIcon from "react-icons/cg";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import axios from 'axios'
+import axios from "axios";
 
 function SideBar({
   activeTab,
   onTabChange,
   toggleSidebar,
   openAddWorkspaceModal,
-  navigateToProject
+  navigateToProject,
+  sidebarOpen,
 }) {
-  const id = localStorage.getItem("id")
+  const id = localStorage.getItem("id");
   const [open, setOpen] = useState(0);
   const [projects, setProjects] = useState([]);
 
@@ -36,16 +37,17 @@ function SideBar({
   };
 
   useEffect(() => {
-    axios.get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/user/${id}`)
+    axios
+      .get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/user/${id}`)
       .then((response) => {
         if (response.data.success === true) {
-          setProjects(response.data.projects)
+          setProjects(response.data.projects);
         }
-      })
+      });
   }, []);
 
   return (
-    <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
+    <Card className="fixed z-50 h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 overflow-hidden">
       <div className="mb-2 p-4">
         <div className="mb-2 flex items-center gap-4 p-4">
           <img src="../OrganizeMeIcon.png" alt="brand" className="h-8 w-8" />
@@ -75,47 +77,12 @@ function SideBar({
           Settings
         </ListItem>
         <hr className="my-2 border-blue-gray-50" />
-        <ListItem ripple={false}>
+        <ListItem ripple={false} onClick={openAddWorkspaceModal}>
           Add a project
           <ListItemSuffix>
-            <IconButton variant="text" color="blue-gray">
-              <cgIcon.CgAddR size={20} onClick={openAddWorkspaceModal} />
-            </IconButton>
+            <cgIcon.CgAddR size={20} />
           </ListItemSuffix>
         </ListItem>
-        <Accordion
-          open={open === 1}
-          icon={
-            <ChevronDownIcon
-              strokeWidth={2.5}
-              className={`mx-auto h-4 w-4 transition-transform ${open === 1 ? "rotate-180" : ""
-                }`}
-            />
-          }
-        >
-          <ListItem className="p-0" selected={open === 1}>
-            <AccordionHeader
-              onClick={() => handleOpen(1)}
-              className="border-b-0 p-3"
-            >
-              <ListItemPrefix>
-                <PresentationChartBarIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              <Typography color="blue-gray" className="mr-auto font-normal">
-                Projects
-              </Typography>
-            </AccordionHeader>
-          </ListItem>
-          <AccordionBody className="py-1">
-            <List className="p-0">
-              {projects.map((project) => (
-                <ListItem key={project._id} onClick={() => navigateToProject(project)}>
-                  {project.title}
-                </ListItem>
-              ))}
-            </List>
-          </AccordionBody>
-        </Accordion>
       </List>
     </Card>
   );
