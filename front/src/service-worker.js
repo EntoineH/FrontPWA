@@ -108,7 +108,17 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener('push', (event) => {
   const options = event.data.json().notification;
 
-  event.waitUntil(self.registration.showNotification('OrganizeMe', options));
+  self.clients.matchAll().then(clients => {
+    const isPageVisible = clients.some(client => client.visibilityState === 'visible');
+    
+    if (isPageVisible) {
+      // Page is visible, show an alert with notification info
+      alert(`New Notification:\nTitle: ${options.title}\nBody: ${options.body}`);
+    } else {
+      // Page is not visible, proceed to show the notification
+      event.waitUntil(self.registration.showNotification('OrganizeMe', options));
+    }
+  });
 });
 
 self.addEventListener('notificationclick', (event) => {
