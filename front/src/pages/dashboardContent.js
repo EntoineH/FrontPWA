@@ -12,7 +12,9 @@ function DashboardContent({ navigateToProject }) {
 
   useEffect(() => {
     axios
-      .get(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/user/${myId}`)
+      .get(
+        `https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/user/${myId}`
+      )
       .then((response) => {
         if (response.data.success === true) {
           setProjects(response.data.projects);
@@ -34,22 +36,29 @@ function DashboardContent({ navigateToProject }) {
     // After deleting, close the modal and reset projectToDelete
     setShowModal(false);
     axios
-    .delete(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/${projectToDelete._id}`)
-    .then((response) => {
-      if (response.data.success === true) {
-        axios
-            .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`, {
-              users: projectToDelete.users.map((user) => user._id).filter((id) => id !== myId),
-              title: "Project deleted",
-              body: `${username} delete the project ${projectToDelete.title}`,
-              redirectUrl: "https://front-pwa-eight.vercel.app/dashboard"
-            })
+      .delete(
+        `https://pwa-backend-2c14dae9b4e4.herokuapp.com/projects/${projectToDelete._id}`
+      )
+      .then((response) => {
+        if (response.data.success === true) {
+          axios
+            .post(
+              `https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`,
+              {
+                users: projectToDelete.users
+                  .map((user) => user._id)
+                  .filter((id) => id !== myId),
+                title: "Project deleted",
+                body: `${username} delete the project ${projectToDelete.title}`,
+                redirectUrl: "https://front-pwa-eight.vercel.app/dashboard",
+              }
+            )
             .then((response) => {
-              console.log(response)
+              console.log(response);
             });
-        window.location.reload(false);
-      }
-    });
+          window.location.reload(false);
+        }
+      });
     setProjectToDelete(null);
   };
 
@@ -120,18 +129,19 @@ function DashboardContent({ navigateToProject }) {
               </div>
 
               <div className="absolute bottom-2 right-2 flex flex-row">
-                {project.users.map((user, index) => (
-                  index < 3 && (
-                  <div
-                    key={index}
-                    className="w-8 h-8 rounded-full bg-indigo-400 text-white flex justify-center items-center text-sm font-bold"
-                    style={{ zIndex: project.users.length - index }}
-                    title={user.username}
-                  >
-                    {user.username.substring(0, 1).toUpperCase()}
-                  </div>
-                  )
-                ))}
+                {project.users.map(
+                  (user, index) =>
+                    index < 3 && (
+                      <div
+                        key={index}
+                        className="w-8 h-8 rounded-full bg-indigo-400 text-white flex justify-center items-center text-sm font-bold"
+                        style={{ zIndex: project.users.length - index }}
+                        title={user.username}
+                      >
+                        {user.username.substring(0, 1).toUpperCase()}
+                      </div>
+                    )
+                )}
                 {project.users.length > 3 && (
                   <div
                     className="w-8 h-8 rounded-full bg-indigo-100 text-white flex justify-center items-center text-sm font-bold"

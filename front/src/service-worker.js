@@ -62,6 +62,7 @@ registerRoute(
     ],
   })
 );
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", (event) => {
@@ -86,43 +87,30 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    fetch(event.request).then((response) => {
-      // Clone the response to cache it
-      const responseToCache = response.clone();
-
-      // Open the cache and add the response
-      if (event.request.method === 'GET' && response.status === 200) {
-        caches.open(cacheName).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-      }
-
-      return response;
-    }).catch(() => {
-      return caches.match(event.request);
+    caches.match(event.request).then((cachedResponse) => {
+      return (
+        cachedResponse ||
+        fetch(event.request).then((response) => {
+          if (event.request.method === "GET") {
+            // Cache the GET request response
+            const clone = response.clone();
+            caches.open(cacheName).then((cache) => {
+              cache.put(event.request, clone);
+            });
+          }
+          return response;
+        })
+      );
     })
   );
 });
 
 // Any other custom service worker logic can go here.
 // Add push notification handling
-self.addEventListener('push', (event) => {
+self.addEventListener("push", (event) => {
   const options = event.data.json().notification;
 
-  event.waitUntil(self.registration.showNotification(options.title, options));
-});
-
-self.addEventListener('notificationclick', (event) => {
-  const notification = event.notification;
-  const data = notification.data;
-
-  // Close the notification
-  notification.close();
-
-  // Open the specified URL in a new tab or window
-  if (data && data.redirectUrl) {
-    self.clients.openWindow(data.redirectUrl);
-  }
+  event.waitUntil(self.registration.showNotification("OrganizeMe", options));
 });
 
 self.addEventListener("notificationclick", (event) => {
@@ -140,6 +128,3 @@ self.addEventListener("pushsubscriptionchange", (event) => {
   //   newSubscription: event.newSubscription.toJSON(),
   // });
 });
-
-
-
