@@ -29,52 +29,23 @@ const Settings = () => {
     setConfirmPassword(event.target.value);
   };
 
-  const handleSave = async (event) => {
+  const handleSave = (event) => {
     event.preventDefault();
-
-    try {
-      var response;
-      if (password !== "") {
-        response = await axios.put(
-          `https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/${id}`,
-          {
-            username,
-            email,
-            notification: notificationEnabled,
-            newPassword: password,
-            confirmPassword,
-          }
-        );
-      } else {
-        response = await axios.put(
+         axios.put(
           `https://pwa-backend-2c14dae9b4e4.herokuapp.com/users/${id}`,
           {
             username,
             email,
             notification: notificationEnabled,
           }
-        );
-      }
-
-      if (response.data.success === true) {
-        localStorage.setItem("email", email);
-        localStorage.setItem("username", username);
-        toast("Settings changed");
-      } else {
-        const { message } = response.data;
-        setErrors({});
-        if (message === "Password and confirmPassword do not match") {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            password: "Password and confirmPassword do not match",
-          }));
-        }
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-      setErrors({ general: "An error occurred. Please try again later." });
-    }
-  };
+        ).then((response) => {
+          if (response.data.success === true) {
+            localStorage.setItem("email", email);
+            localStorage.setItem("username", username);
+            toast("Settings changed");
+          }
+        })
+  }
 
   useEffect(() => {
     if ("Notification" in window) {
@@ -200,51 +171,6 @@ const Settings = () => {
                         id="email"
                         autocomplete="family-name"
                         required
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="sm:col-span-3">
-                    <label
-                      for="n-password"
-                      class="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      New password
-                    </label>
-                    <div class="md:mt-2">
-                      <input
-                        onChange={handlePassword}
-                        value={password}
-                        type="password"
-                        name="fir"
-                        id="n-password"
-                        autocomplete="given-name"
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                          errors.password ? "border-red-500" : ""
-                        }`}
-                      />
-                      {errors.password && (
-                        <p className="text-red-600">{errors.password}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div class="sm:col-span-3">
-                    <label
-                      for="c-password"
-                      class="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Confirm new password
-                    </label>
-                    <div class="md:mt-2">
-                      <input
-                        onChange={handleConfirmPassword}
-                        value={confirmPassword}
-                        type="password"
-                        name="last-"
-                        id="c-password"
-                        autocomplete="family-name"
                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
