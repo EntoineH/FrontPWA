@@ -16,8 +16,6 @@ import Dashboard from "./pages/dashboard";
 import ProtectedRoute from "./component/ProtectedRoute";
 
 function App() {
-  const isAuthenticated = localStorage.getItem("token");
-
   return (
     <div>
       <Router>
@@ -33,7 +31,10 @@ function App() {
             path="/successresetpassword"
             element={<SuccessResetPassPage />}
           />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute element={<Dashboard />} />}
+          />
         </Routes>
       </Router>
     </div>
