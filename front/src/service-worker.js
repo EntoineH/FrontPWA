@@ -87,20 +87,18 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return (
-        cachedResponse ||
-        fetch(event.request).then((response) => {
-          if (event.request.method === "GET") {
-            // Cache the GET request response
-            const clone = response.clone();
-            caches.open(cacheName).then((cache) => {
-              cache.put(event.request, clone);
-            });
-          }
-          return response;
-        })
-      );
+    fetch(event.request).then((response) => {
+      // Clone the response to cache it
+      const responseToCache = response.clone();
+
+      // Open the cache and add the response
+      caches.open(cacheName).then((cache) => {
+        cache.put(event.request, responseToCache);
+      });
+
+      return response;
+    }).catch(() => {
+      return caches.match(event.request);
     })
   );
 });
