@@ -22,14 +22,19 @@ const Task = ({
         if (response.data.success === true) {
           onDeleteTask(taskId);
           axios
-            .post(`https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`, {
-              users: collaborators.map((collaborator) => collaborator._id).filter((id) => id !== myId),
-              title: "Task deleted",
-              body: `${username} delete the task ${title}`,
-              redirectUrl: "https://front-pwa-eight.vercel.app/dashboard"
-            })
+            .post(
+              `https://pwa-backend-2c14dae9b4e4.herokuapp.com/notifyUsers`,
+              {
+                users: collaborators
+                  .map((collaborator) => collaborator._id)
+                  .filter((id) => id !== myId),
+                title: "Task deleted",
+                body: `${username} delete the task ${title}`,
+                redirectUrl: "https://front-pwa-eight.vercel.app/dashboard",
+              }
+            )
             .then((response) => {
-              console.log(response)
+              console.log(response);
             });
         }
       });
@@ -64,7 +69,7 @@ const Task = ({
           </div>
         ))}
       </div>
-      <div className="flex flex-row space-x-4">
+      <div className="flex flex-col md:flex-row space-x-4">
         <div className="flex justify-end mt-4">
           <Button
             color="blue"
